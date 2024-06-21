@@ -1,5 +1,8 @@
 package org.example.handler;
 
+import com.google.gson.reflect.TypeToken;
+import org.example.controller.ChefController;
+import org.example.controller.EmployeeController;
 import org.example.server.MultiClientServer;
 import org.example.controller.AuthenticationController;
 import org.example.controller.FoodItemController;
@@ -15,17 +18,23 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ClientHandler implements Runnable {
     private Socket socket;
     private AuthenticationController authController;
     private FoodItemController foodItemController;
+
+    private EmployeeController employeeController;
+    private ChefController chefController;
     private Gson gson = new Gson();
 
     public ClientHandler(Socket socket) throws SQLException {
         this.socket = socket;
         this.authController = new AuthenticationController();
         this.foodItemController = new FoodItemController();
+        this.chefController = new ChefController();
+        this.employeeController = new EmployeeController();
     }
 
     @Override
@@ -53,6 +62,12 @@ public class ClientHandler implements Runnable {
                         break;
                     case "VIEW_ALL_FOOD_ITEMS":
                         handleViewAllFoodItems(out);
+                        break;
+                    case "GET_RECOMMENDED_ITEMS":
+                         handleRecommendationFoodItems(out);
+                         break;
+                    case "VOTE_RECOMMENDED_ITEMS":
+                        handleVotedFoodItems(in,out);
                         break;
                     default:
                         System.out.println("Unknown message type received: " + messageType.type);
@@ -106,6 +121,19 @@ public class ClientHandler implements Runnable {
     private void handleViewAllFoodItems(PrintWriter out) throws IOException {
         String foodItemsJson = foodItemController.getAllFoodItems();
         out.println(foodItemsJson);
+    }
+
+    private void handleRecommendationFoodItems(PrintWriter out) throws IOException {
+        String foodItemsJson = chefController.getTopFoodItems();
+        out.println(foodItemsJson);
+    }
+
+    private void handleVotedFoodItems(BufferedReader in, PrintWriter out) throws IOException {
+        String votedItemIdsJson = in.readLine();
+        List<Integer> votedItems = gson.fromJson(votedItemIdsJson, new TypeToken<List<Integer>>(){}.getType());
+        employeeController.voteFoodItem(votedItems);
+        out.println("Food Item Voted Successfully");
+
     }
 
     public String getClientInfo() {

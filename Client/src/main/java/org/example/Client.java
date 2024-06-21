@@ -61,10 +61,10 @@ public class Client {
                         exit = AdminHandler.handleAdminSelection(selection, scanner, out, in, gson);
                         break;
                     case "Chef":
-                        exit = ChefHandler.handleChefSelection(selection);
+                        exit = ChefHandler.handleChefSelection(selection, scanner, out, in, gson);
                         break;
                     case "Employee":
-                        exit = EmployeeHandler.handleEmployeeSelection(selection);
+                        exit = EmployeeHandler.handleEmployeeSelection(selection, scanner, out, in, gson);
                         break;
                     default:
                         System.out.println("Unknown role.");
@@ -83,7 +83,7 @@ public class Client {
             case "Admin":
                 return "Admin Menu:\n1. Add Food Item\n2. Update Food Item\n3. Delete Food Item\n4. View All Food Items\n5. Exit\nEnter your choice:";
             case "Chef":
-                return "Chef Menu:\n1. View Menu\n2. view Report\n3. Exit\nEnter your choice:";
+                return "Chef Menu:\n1. Get Recommendation\n2. view Report\n3. Exit\nEnter your choice:";
             case "Employee":
                 return "Employee Menu:\n1. View Menu\n2. Give Feedback\n3. Exit\nEnter your choice:";
             default:

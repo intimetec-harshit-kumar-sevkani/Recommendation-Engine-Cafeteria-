@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.models;
 
 import java.util.Date;
 
@@ -83,6 +83,6 @@ public class VotedItem {
                 ", isDelete=" + isDelete +
                 '}';
     }
-// toString
 
 }
+

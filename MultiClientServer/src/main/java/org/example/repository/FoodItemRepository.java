@@ -42,7 +42,7 @@ public class FoodItemRepository {
     }
 
     public void deleteFoodItem(int id) throws SQLException {
-        String sql = "UPDATE FoodItems SET IsDelete = true WHERE Id = ?";
+        String sql = "DELETE FROM FoodItems WHERE Id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -67,4 +67,34 @@ public class FoodItemRepository {
         }
         return foodItems;
     }
+
+    public List<FoodItem> getTopFoodItems(String mealType) throws SQLException {
+        String sql = "SELECT fi.* " +
+                "FROM FoodItemAudit fia " +
+                "JOIN FoodItems fi ON fia.FoodItemId = fi.Id " +
+                "JOIN MealTypes mt ON fi.MealTypeId = mt.Id " +
+                "WHERE mt.Type = ? " +
+                "ORDER BY (fia.Rating + fia.Sentiment) / 2 DESC " +
+                "LIMIT 2";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, mealType);
+            try (ResultSet rs = stmt.executeQuery()) {
+                List<FoodItem> foodItems = new ArrayList<>();
+                while (rs.next()) {
+                    FoodItem foodItem = new FoodItem();
+                    foodItem.setId(rs.getInt("Id"));
+                    foodItem.setMealTypeId(rs.getInt("MealTypeId"));
+                    foodItem.setName(rs.getString("Name"));
+                    foodItem.setPrice(rs.getBigDecimal("Price"));
+                    foodItem.setAvailable(rs.getBoolean("IsAvailable"));
+                    foodItem.setDelete(rs.getBoolean("IsDelete"));
+                    foodItems.add(foodItem);
+                }
+                return foodItems;
+            }
+        }
+    }
+
+
 }
