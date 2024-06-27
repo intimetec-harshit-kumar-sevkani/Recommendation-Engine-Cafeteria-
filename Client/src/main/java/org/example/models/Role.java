@@ -5,7 +5,6 @@ public class Role {
     private String type;
     private boolean isDelete;
 
-    // Constructors
     public Role() {}
 
     public Role(int id, String type, boolean isDelete) {
@@ -14,7 +13,6 @@ public class Role {
         this.isDelete = isDelete;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -39,7 +37,6 @@ public class Role {
         isDelete = delete;
     }
 
-    // toString
     @Override
     public String toString() {
         return "Role{id=" + id + ", type='" + type + "', isDelete=" + isDelete + "}";

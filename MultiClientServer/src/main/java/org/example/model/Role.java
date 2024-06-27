@@ -5,8 +5,6 @@ public class Role {
     private String type;
     private boolean isDelete;
 
-    // Getters and Setters
-
 
     public Role() {
     }

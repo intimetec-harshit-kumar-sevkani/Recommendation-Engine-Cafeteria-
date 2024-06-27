@@ -10,7 +10,6 @@ public class VotedItem {
     private boolean isPrepared;
     private boolean isDelete;
 
-    // Constructors
     public VotedItem() {}
 
     public VotedItem(int id, int foodItemId, int vote, Date date, boolean isPrepared, boolean isDelete) {
@@ -38,7 +37,6 @@ public class VotedItem {
         isPrepared = prepared;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }

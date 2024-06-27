@@ -10,9 +10,6 @@ public class FoodItem {
     private boolean isAvailable;
     private boolean isDelete;
 
-    // Constructors, getters, and setters
-
-
     public FoodItem() {
     }
 

@@ -3,13 +3,10 @@ package org.example.handler;
 import com.google.gson.reflect.TypeToken;
 import org.example.controller.ChefController;
 import org.example.controller.EmployeeController;
+import org.example.model.*;
 import org.example.server.MultiClientServer;
 import org.example.controller.AuthenticationController;
 import org.example.controller.FoodItemController;
-import org.example.model.MessageType;
-import org.example.model.FoodItem;
-import org.example.model.LoginMessage;
-import org.example.model.RoleMessage;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -69,6 +66,9 @@ public class ClientHandler implements Runnable {
                     case "VOTE_RECOMMENDED_ITEMS":
                         handleVotedFoodItems(in,out);
                         break;
+                    case "GIVE_FEEDBACK":
+                        handleFeedback(in,out);
+                        break;
                     default:
                         System.out.println("Unknown message type received: " + messageType.type);
                 }
@@ -92,8 +92,8 @@ public class ClientHandler implements Runnable {
         LoginMessage loginMessage = gson.fromJson(loginMessageJson, LoginMessage.class);
         System.out.println("Received login info: " + loginMessage.getEmail());
 
-        String role = authController.login(loginMessage.getEmail(), loginMessage.getName());
-        RoleMessage roleMessage = new RoleMessage(role);
+        RoleMessage roleMessage = authController.login(loginMessage.getEmail(), loginMessage.getName());
+
         String roleJson = gson.toJson(roleMessage);
         out.println(roleJson);
     }
@@ -134,6 +134,13 @@ public class ClientHandler implements Runnable {
         employeeController.voteFoodItem(votedItems);
         out.println("Food Item Voted Successfully");
 
+    }
+
+    private void handleFeedback(BufferedReader in, PrintWriter out) throws IOException {
+        String feedbackJson = in.readLine();
+        Feedback feedback = gson.fromJson(feedbackJson, Feedback.class);
+        employeeController.addFeedback(feedback);
+        out.println("Feedback added Successfully");
     }
 
     public String getClientInfo() {

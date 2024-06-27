@@ -1,6 +1,5 @@
 package org.example.controller;
 
-// AdminController.java
 
 import org.example.model.FoodItem;
 import org.example.service.FoodItemService;

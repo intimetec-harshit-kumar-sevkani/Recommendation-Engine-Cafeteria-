@@ -8,7 +8,6 @@ public class FoodItemAudit {
     private double sentiment;
     private int prepared;
 
-    // Constructors
     public FoodItemAudit() {}
 
     public FoodItemAudit(int id, int foodItemId, double rating, int vote, double sentiment, int prepared) {
@@ -69,7 +68,6 @@ public class FoodItemAudit {
         this.prepared = prepared;
     }
 
-    // toString
     @Override
     public String toString() {
         return "FoodItemAudit{id=" + id + ", foodItemId=" + foodItemId + ", rating=" + rating + ", vote=" + vote + ", sentiment=" + sentiment + ", prepared=" + prepared + "}";

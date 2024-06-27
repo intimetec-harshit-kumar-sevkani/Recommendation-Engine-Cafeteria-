@@ -7,5 +7,4 @@ public class MessageType {
         this.type = type;
     }
 
-    // Getters and setters (optional)
 }

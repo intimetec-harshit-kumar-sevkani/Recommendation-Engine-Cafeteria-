@@ -1,7 +1,6 @@
 package org.example.service;
 
 import org.example.model.FoodItem;
-import org.example.repository.FoodItemRepository;
 import org.example.repository.VotedItemRepository;
 
 import java.sql.SQLException;

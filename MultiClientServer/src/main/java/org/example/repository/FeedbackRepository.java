@@ -1,12 +1,11 @@
 package org.example.repository;
 
 import org.example.Config.SQLDataSourceConfig;
+import org.example.model.Feedback;
+import org.example.model.FoodItem;
 import org.example.model.FoodItemRating;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +18,17 @@ public class FeedbackRepository {
     }
 
     public List<FoodItemRating> getFoodItemRatingsForToday() throws SQLException {
-        String sql = "SELECT food_item_id, AVG(rating) AS average_rating, GROUP_CONCAT(comment SEPARATOR ', ') AS comments " +
-                "FROM rating " +
-                "WHERE rating_date = CURDATE() " +
-                "GROUP BY food_item_id";
+        String sql = "SELECT FoodItemId, AVG(Rating) AS average_rating, GROUP_CONCAT(Comment SEPARATOR ', ') AS comments " +
+                "FROM Feedbacks " +
+                "WHERE Date = CURDATE() " +
+                "GROUP BY FoodItemId";
         List<FoodItemRating> foodItemRatings = new ArrayList<>();
 
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 FoodItemRating foodItemRating = new FoodItemRating();
-                foodItemRating.setFoodItemId(((ResultSet) rs).getInt("food_item_id"));
+                foodItemRating.setFoodItemId(((ResultSet) rs).getInt("FoodItemId"));
                 foodItemRating.setAverageRating(rs.getDouble("average_rating"));
                 foodItemRating.setComments(rs.getString("comments"));
                 foodItemRatings.add(foodItemRating);
@@ -43,7 +42,7 @@ public class FeedbackRepository {
 
 
     public void updateItemAudit(FoodItemRating foodItemRating, double averageSentiment) throws SQLException {
-        String sql = "UPDATE item_audit SET average_rating = ?, average_sentiment = ? WHERE food_item_id = ?";
+        String sql = "UPDATE FoodItemAudit SET Rating = ?, Sentiment = ? WHERE FoodItemId = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setDouble(1, foodItemRating.getAverageRating());
@@ -55,6 +54,17 @@ public class FeedbackRepository {
             throw new RuntimeException("Database error occurred while updating item audit", e);
         }
     }
-
+    public void addFeedback(Feedback feedback) throws SQLException {
+        String sql = "INSERT INTO Feedbacks (FoodItemId, UserId, Rating, Comment , Date ,IsDelete) VALUES (?, ?, ?, ?, CURDATE(), ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, feedback.getFoodItemId());
+            stmt.setInt(2, feedback.getUserId());
+            stmt.setDouble(3, feedback.getRating());
+            stmt.setString(4, feedback.getComment());
+           // stmt.setDate(5,  feedback.getDate());
+            stmt.setBoolean(5, feedback.isDelete());
+            stmt.executeUpdate();
+        }
+    }
 
 }

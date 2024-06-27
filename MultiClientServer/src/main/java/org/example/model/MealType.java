@@ -5,7 +5,6 @@ public class MealType {
     private String type;
     private boolean isDelete;
 
-    // Constructors
     public MealType() {}
 
     public MealType(int id, String type, boolean isDelete) {
@@ -39,7 +38,6 @@ public class MealType {
         isDelete = delete;
     }
 
-    // toString
     @Override
     public String toString() {
         return "MealType{id=" + id + ", type='" + type + "', isDelete=" + isDelete + "}";

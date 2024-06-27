@@ -1,6 +1,5 @@
 package org.example.model;
 
-// FoodItem.java
 
 import java.math.BigDecimal;
 
@@ -12,7 +11,6 @@ public class FoodItem {
     private boolean isAvailable;
     private boolean isDelete;
 
-    // Getters and Setters
 
     public int getId() {
         return id;

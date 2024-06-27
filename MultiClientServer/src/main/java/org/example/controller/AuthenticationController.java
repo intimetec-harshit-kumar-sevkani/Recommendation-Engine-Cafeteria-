@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.model.RoleMessage;
 import org.example.service.AuthenticationService;
 
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ public class AuthenticationController {
         this.service = new AuthenticationService();
     }
 
-    public String login(String email, String name) {
+    public RoleMessage login(String email, String name) {
         return service.authenticate(email, name);
     }
 }

@@ -13,7 +13,7 @@ import org.example.models.MessageType;
 import org.example.models.RoleMessage;
 
 public class Client {
-    private static final String SERVER_ADDRESS = "127.0.0.1";
+    private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 12345;
 
     public static void main(String[] args) {
@@ -33,7 +33,6 @@ public class Client {
             String loginTypeJson = gson.toJson(loginType);
             out.println(loginTypeJson);
 
-            // Send login info
             System.out.println("Enter your email:");
             String email = scanner.nextLine();
             System.out.println("Enter your name:");
@@ -45,17 +44,16 @@ public class Client {
 
             RoleMessage roleMessage = gson.fromJson(in.readLine(), RoleMessage.class);
             String role = roleMessage.getRole();
+            int userId = roleMessage.getUserId();
             System.out.println("Role: " + role);
-
+            System.out.println("UserId : " + roleMessage.getUserId());
             boolean exit = false;
             while (!exit) {
-                // Show menu based on role
+
                 System.out.println(getMenuForRole(role));
 
-                // Read selection from user
                 String selection = scanner.nextLine();
 
-                // Handle menu selection
                 switch (role) {
                     case "Admin":
                         exit = AdminHandler.handleAdminSelection(selection, scanner, out, in, gson);
@@ -64,7 +62,7 @@ public class Client {
                         exit = ChefHandler.handleChefSelection(selection, scanner, out, in, gson);
                         break;
                     case "Employee":
-                        exit = EmployeeHandler.handleEmployeeSelection(selection, scanner, out, in, gson);
+                        exit = EmployeeHandler.handleEmployeeSelection(selection, scanner, out, in, gson,userId);
                         break;
                     default:
                         System.out.println("Unknown role.");
@@ -83,9 +81,9 @@ public class Client {
             case "Admin":
                 return "Admin Menu:\n1. Add Food Item\n2. Update Food Item\n3. Delete Food Item\n4. View All Food Items\n5. Exit\nEnter your choice:";
             case "Chef":
-                return "Chef Menu:\n1. Get Recommendation\n2. view Report\n3. Exit\nEnter your choice:";
+                return "Chef Menu:\n1. Get Recommendation\n2. view FoodItem\n3. Exit\nEnter your choice:";
             case "Employee":
-                return "Employee Menu:\n1. View Menu\n2. Give Feedback\n3. Exit\nEnter your choice:";
+                return "Employee Menu:\n1. vote Item\n2. view FoodItem\n3. Exit\n4. Give Feedback\nEnter your choice:";
             default:
                 return "Unknown role.";
         }

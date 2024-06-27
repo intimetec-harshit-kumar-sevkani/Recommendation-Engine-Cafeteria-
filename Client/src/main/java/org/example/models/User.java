@@ -7,7 +7,6 @@ public class User {
     private String email;
     private boolean isDelete;
 
-    // Constructors
     public User() {}
 
     public User(int id, int roleId, String name, String email, boolean isDelete) {
@@ -18,7 +17,6 @@ public class User {
         this.isDelete = isDelete;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -59,7 +57,6 @@ public class User {
         isDelete = delete;
     }
 
-    // toString
     @Override
     public String toString() {
         return "User{id=" + id + ", roleId=" + roleId + ", name='" + name + "', email='" + email + "', isDelete=" + isDelete + "}";

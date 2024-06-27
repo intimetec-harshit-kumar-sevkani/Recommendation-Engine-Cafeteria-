@@ -5,10 +5,8 @@ public class FoodItemRating {
     private double averageRating;
     private String comments;
 
-    // Constructor
     public FoodItemRating() {}
 
-    // Getters and Setters
     public int getFoodItemId() {
         return foodItemId;
     }
@@ -33,7 +31,6 @@ public class FoodItemRating {
         this.comments = comments;
     }
 
-    // Optional: toString method for easy printing
     @Override
     public String toString() {
         return "FoodItemRating{" +

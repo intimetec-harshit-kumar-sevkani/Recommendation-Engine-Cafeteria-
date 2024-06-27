@@ -1,7 +1,6 @@
 package org.example.controller;
 
 import org.example.model.FoodItem;
-import org.example.service.FoodItemService;
 import org.example.service.RecommendationService;
 
 import java.sql.SQLException;

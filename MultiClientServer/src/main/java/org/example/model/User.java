@@ -7,8 +7,6 @@ public class User {
     private String email;
     private boolean isDelete;
 
-    // Getters and Setters
-
 
     public User() {
     }

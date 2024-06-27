@@ -1,7 +1,5 @@
 package org.example.service;
 
-// AdminService.java
-
 import java.sql.SQLException;
 import java.util.List;
 import org.example.model.FoodItem;

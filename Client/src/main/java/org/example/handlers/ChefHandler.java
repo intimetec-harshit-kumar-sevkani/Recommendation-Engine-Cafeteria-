@@ -22,7 +22,10 @@ public class ChefHandler {
                 getRecommendedItem(out, in, gson);
                 return false;
             case "2":
-                System.out.println("View Food Items...");
+                MessageType viewAllFoodItems = new MessageType("VIEW_ALL_FOOD_ITEMS");
+                String viewAllFoodItemsJson = gson.toJson(viewAllFoodItems);
+                out.println(viewAllFoodItemsJson);
+                viewAllFoodItems(out, in, gson);
                 return false;
             case "3":
                 System.out.println("Exiting...");
@@ -34,6 +37,12 @@ public class ChefHandler {
     }
 
     private static void getRecommendedItem(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+        String response = in.readLine();
+        List<FoodItem> foodItems = gson.fromJson(response, new TypeToken<List<FoodItem>>(){}.getType());
+        foodItems.forEach(System.out::println);
+    }
+
+    private static void viewAllFoodItems(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
         String response = in.readLine();
         List<FoodItem> foodItems = gson.fromJson(response, new TypeToken<List<FoodItem>>(){}.getType());
         foodItems.forEach(System.out::println);

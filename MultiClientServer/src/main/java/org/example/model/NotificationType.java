@@ -6,7 +6,6 @@ public class NotificationType {
     private int validFor;
     private boolean isDelete;
 
-    // Constructors
     public NotificationType() {}
 
     public NotificationType(int id, String type, int validFor, boolean isDelete) {
@@ -16,7 +15,6 @@ public class NotificationType {
         this.isDelete = isDelete;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -49,7 +47,6 @@ public class NotificationType {
         isDelete = delete;
     }
 
-    // toString
     @Override
     public String toString() {
         return "NotificationType{id=" + id + ", type='" + type + "', validFor=" + validFor + ", isDelete=" + isDelete + "}";

@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.model.Role;
+import org.example.model.RoleMessage;
 import org.example.model.User;
 import org.example.repository.AuthenticationRepository;
 
@@ -13,14 +14,17 @@ public class AuthenticationService {
         this.repository = new AuthenticationRepository();
     }
 
-    public String authenticate(String email, String name) {
+    public RoleMessage authenticate(String email, String name) {
         User user = repository.findUserByEmailAndName(email, name);
         if (user != null) {
             Role role = repository.findRoleById(user.getRoleId());
             if (role != null) {
-                return role.getType();
+                RoleMessage roleMessage = new RoleMessage();
+                roleMessage.setRole(role.getType());
+                roleMessage.setUserId(user.getId());
+                return roleMessage;
             }
         }
-        return "Unknown";
+        return null;
     }
 }

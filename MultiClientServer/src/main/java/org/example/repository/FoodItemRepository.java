@@ -1,6 +1,5 @@
 package org.example.repository;
 
-// AdminRepository.java
 
 import java.sql.*;
 import java.util.ArrayList;

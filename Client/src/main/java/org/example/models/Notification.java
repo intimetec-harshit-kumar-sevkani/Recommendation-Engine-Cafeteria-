@@ -6,7 +6,6 @@ public class Notification {
     private String message;
     private boolean isDelete;
 
-    // Constructors
     public Notification() {}
 
     public Notification(int id, int notificationTypeId, String message, boolean isDelete) {
@@ -49,7 +48,6 @@ public class Notification {
         isDelete = delete;
     }
 
-    // toString
     @Override
     public String toString() {
         return "Notification{id=" + id + ", notificationTypeId=" + notificationTypeId + ", message='" + message + "', isDelete=" + isDelete + "}";

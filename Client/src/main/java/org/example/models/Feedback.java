@@ -1,5 +1,6 @@
 package org.example.models;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Feedback {
@@ -11,7 +12,6 @@ public class Feedback {
     private Date date;
     private boolean isDelete;
 
-    // Constructors
     public Feedback() {}
 
     public Feedback(int id, int foodItemId, int userId, double rating, String comment, Date date, boolean isDelete) {
@@ -24,7 +24,6 @@ public class Feedback {
         this.isDelete = isDelete;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -81,7 +80,6 @@ public class Feedback {
         isDelete = delete;
     }
 
-    // toString
     @Override
     public String toString() {
         return "Feedback{id=" + id + ", foodItemId=" + foodItemId + ", userId=" + userId + ", rating=" + rating + ", comment='" + comment + "', date=" + date + ", isDelete=" + isDelete + "}";

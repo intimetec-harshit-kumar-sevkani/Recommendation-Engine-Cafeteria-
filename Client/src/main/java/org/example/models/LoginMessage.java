@@ -9,5 +9,4 @@ public class LoginMessage {
         this.name = name;
     }
 
-    // Getters and setters (optional)
 }
