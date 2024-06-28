@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.model.FoodItem;
 import org.example.model.FoodItemRating;
+import org.example.model.RecommendedDTO;
 import org.example.repository.FeedbackRepository;
 import org.example.repository.FoodItemRepository;
 import org.example.repository.VotedItemRepository;
@@ -25,7 +26,7 @@ public class RecommendationService {
         this.feedbackRepository = new FeedbackRepository();
     }
 
-    public List<FoodItem> getAllFoodItems() throws SQLException {
+    public List<FoodItem> getAllFoodItems(RecommendedDTO recommendedDTO) throws SQLException {
         List<FoodItem> allTopFoodItems = new ArrayList<>();
         List<String> mealTypes = List.of("Breakfast", "Lunch", "Dinner");
         for (String mealType : mealTypes) {

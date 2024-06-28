@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.model.FoodItem;
+import org.example.model.RecommendedDTO;
 import org.example.service.RecommendationService;
 
 import java.sql.SQLException;
@@ -15,9 +16,9 @@ public class ChefController {
         this.recommendationService = new RecommendationService();
     }
 
-    public String getTopFoodItems() {
+    public String getTopFoodItems(RecommendedDTO recommendedDTO) {
         try {
-            List<FoodItem> foodItems = recommendationService.getAllFoodItems();
+            List<FoodItem> foodItems = recommendationService.getAllFoodItems(recommendedDTO);
             return gson.toJson(foodItems);
         } catch (SQLException e) {
             return "Error: " + e.getMessage();

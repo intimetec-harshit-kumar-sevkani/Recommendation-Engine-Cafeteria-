@@ -61,7 +61,7 @@ public class ClientHandler implements Runnable {
                         handleViewAllFoodItems(out);
                         break;
                     case "GET_RECOMMENDED_ITEMS":
-                         handleRecommendationFoodItems(out);
+                         handleRecommendationFoodItems(in,out);
                          break;
                     case "VOTE_RECOMMENDED_ITEMS":
                         handleVotedFoodItems(in,out);
@@ -123,8 +123,10 @@ public class ClientHandler implements Runnable {
         out.println(foodItemsJson);
     }
 
-    private void handleRecommendationFoodItems(PrintWriter out) throws IOException {
-        String foodItemsJson = chefController.getTopFoodItems();
+    private void handleRecommendationFoodItems(BufferedReader in,PrintWriter out) throws IOException {
+        String recommendedDTOJson = in.readLine();
+        RecommendedDTO recommendedDTO= gson.fromJson(recommendedDTOJson, RecommendedDTO.class);
+        String foodItemsJson = chefController.getTopFoodItems(recommendedDTO);
         out.println(foodItemsJson);
     }
 
