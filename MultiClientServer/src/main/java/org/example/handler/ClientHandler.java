@@ -69,6 +69,9 @@ public class ClientHandler implements Runnable {
                     case "GIVE_FEEDBACK":
                         handleFeedback(in,out);
                         break;
+                    case "GET_VOTED_ITEMS":
+                        handleRollOutItems(in,out);
+                        break;
                     default:
                         System.out.println("Unknown message type received: " + messageType.type);
                 }
@@ -130,13 +133,38 @@ public class ClientHandler implements Runnable {
         out.println(foodItemsJson);
     }
 
-    private void handleVotedFoodItems(BufferedReader in, PrintWriter out) throws IOException {
+  /*  private void handleVotedFoodItems(BufferedReader in, PrintWriter out) throws IOException {
+        String votedItemIdsJson = in.readLine();
+        List<Integer> votedItems = gson.fromJson(votedItemIdsJson, new TypeToken<List<Integer>>(){}.getType());
+        employeeController.voteFoodItem(votedItems);
+        out.println("Food Item Voted Successfully");
+
+    }*/
+
+
+    private void handleVotedFoodItems(BufferedReader in, PrintWriter out) throws IOException, SQLException {
+        String mealType = in.readLine();
+        List<FoodItem> foodItems = employeeController.viewVoteItem(mealType);
+        String foodItemsJson = gson.toJson(foodItems);
+        out.println(foodItemsJson);
         String votedItemIdsJson = in.readLine();
         List<Integer> votedItems = gson.fromJson(votedItemIdsJson, new TypeToken<List<Integer>>(){}.getType());
         employeeController.voteFoodItem(votedItems);
         out.println("Food Item Voted Successfully");
 
     }
+
+    public void handleRollOutItems(BufferedReader in, PrintWriter out) throws IOException, SQLException {
+        String mealType = in.readLine();
+        List<RollOutFoodItemsDTO> rollOutFoodItemsDTOList = chefController.getRollOutFoodItemsDTOList(mealType);
+        String rollOutFoodItemJson = gson.toJson(rollOutFoodItemsDTOList);
+        out.println(rollOutFoodItemJson);
+        String rollItemIdsJson = in.readLine();
+        List<Integer> rollOutItems = gson.fromJson(rollItemIdsJson, new TypeToken<List<Integer>>(){}.getType());
+        chefController.rollOutItems(rollOutItems);
+        out.println("Food Item Roll Out Successfully");
+    }
+
 
     private void handleFeedback(BufferedReader in, PrintWriter out) throws IOException {
         String feedbackJson = in.readLine();

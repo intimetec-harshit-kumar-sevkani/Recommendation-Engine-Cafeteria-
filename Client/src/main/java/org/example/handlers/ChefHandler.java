@@ -5,10 +5,12 @@ import com.google.gson.reflect.TypeToken;
 import org.example.models.FoodItem;
 import org.example.models.MessageType;
 import org.example.models.RecommendedDTO;
+import org.example.models.RollOutFoodItemsDTO;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -31,6 +33,12 @@ public class ChefHandler {
             case "3":
                 System.out.println("Exiting...");
                 return true;
+            case "4":
+                MessageType getVotedItem = new MessageType("GET_VOTED_ITEMS");
+                String getVotedItemJson = gson.toJson(getVotedItem);
+                out.println(getVotedItemJson);
+                rollOutFoodItems(out, in,scanner, gson);
+                return false;
             default:
                 System.out.println("Invalid selection.");
                 return false;
@@ -54,6 +62,29 @@ public class ChefHandler {
         String response = in.readLine();
         List<FoodItem> foodItems = gson.fromJson(response, new TypeToken<List<FoodItem>>(){}.getType());
         foodItems.forEach(System.out::println);
+    }
+
+    private static void rollOutFoodItems(PrintWriter out, BufferedReader in,Scanner scanner, Gson gson) throws IOException {
+        System.out.println("Enter the MealType : ");
+        String mealType = scanner.nextLine();
+        out.println(mealType);
+        String foodItemJson = in.readLine();
+        List<RollOutFoodItemsDTO> foodItemList = gson.fromJson(foodItemJson, new TypeToken<List<RollOutFoodItemsDTO>>(){}.getType());
+        foodItemList.forEach(System.out::println);
+
+        List<Integer> foodItemIds = new ArrayList<>();
+        System.out.println("Enter the IDs of the food items to rollOut : ");
+        String[] inputIds = scanner.nextLine().split(",");
+        for (String inputId : inputIds) {
+            foodItemIds.add(Integer.parseInt(inputId.trim()));
+        }
+        String foodItemIdsJson = gson.toJson(foodItemIds);
+        out.println(foodItemIdsJson);
+
+        String response = in.readLine();
+        System.out.println(response);
+
+
     }
 
 }

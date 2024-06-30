@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.model.Feedback;
 import org.example.model.FoodItem;
+import org.example.model.VotedItem;
 import org.example.service.FeedbackService;
 import org.example.service.VotedItemService;
 
@@ -34,5 +35,10 @@ public class EmployeeController {
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
+    }
+
+    public List<FoodItem> viewVoteItem(String mealType) throws SQLException {
+            List<FoodItem> foodItems = votedItemService.viewFoodItem(mealType);
+            return foodItems;
     }
 }

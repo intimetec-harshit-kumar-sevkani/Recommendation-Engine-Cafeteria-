@@ -81,7 +81,7 @@ public class Client {
             case "Admin":
                 return "Admin Menu:\n1. Add Food Item\n2. Update Food Item\n3. Delete Food Item\n4. View All Food Items\n5. Exit\nEnter your choice:";
             case "Chef":
-                return "Chef Menu:\n1. Get Recommendation\n2. view FoodItem\n3. Exit\nEnter your choice:";
+                return "Chef Menu:\n1. Get Recommendation\n2. view FoodItem\n3. Exit\n4. RollOut FoodItems\nEnter your choice:";
             case "Employee":
                 return "Employee Menu:\n1. vote Item\n2. view FoodItem\n3. Exit\n4. Give Feedback\nEnter your choice:";
             default:

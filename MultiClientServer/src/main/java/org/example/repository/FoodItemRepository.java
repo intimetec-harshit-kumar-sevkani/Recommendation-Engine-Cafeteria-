@@ -67,17 +67,18 @@ public class FoodItemRepository {
         return foodItems;
     }
 
-    public List<FoodItem> getTopFoodItems(String mealType) throws SQLException {
+    public List<FoodItem> getTopFoodItems(String mealType, int numberOfItems) throws SQLException {
         String sql = "SELECT fi.* " +
                 "FROM FoodItemAudit fia " +
                 "JOIN FoodItems fi ON fia.FoodItemId = fi.Id " +
                 "JOIN MealTypes mt ON fi.MealTypeId = mt.Id " +
                 "WHERE mt.Type = ? " +
                 "ORDER BY (fia.Rating + fia.Sentiment) / 2 DESC " +
-                "LIMIT 2";
+                "LIMIT ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, mealType);
+            stmt.setInt(2, numberOfItems);
             try (ResultSet rs = stmt.executeQuery()) {
                 List<FoodItem> foodItems = new ArrayList<>();
                 while (rs.next()) {

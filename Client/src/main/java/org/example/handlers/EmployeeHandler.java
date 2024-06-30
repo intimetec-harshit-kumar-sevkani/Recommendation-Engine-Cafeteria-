@@ -9,10 +9,7 @@ import org.example.models.MessageType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -46,7 +43,16 @@ public class EmployeeHandler {
                 return false;
         }
     }
-    private static void voteFoodItem(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+    public static void voteFoodItem(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+        System.out.println("Enter Meal Type : ");
+        String mealType = scanner.nextLine();
+        out.println(mealType);
+        String voteItemJson = in.readLine();
+        List<FoodItem> votedItemList = gson.fromJson(voteItemJson, new TypeToken<List<FoodItem>>(){}.getType());
+        votedItemList.forEach(System.out::println);
+
+        //
+
         List<Integer> votedItemIds = new ArrayList<>();
         System.out.println("Enter the IDs of the food items to vote for");
         String[] inputIds = scanner.nextLine().split(",");
@@ -59,7 +65,24 @@ public class EmployeeHandler {
         String response = in.readLine();
         System.out.println(response);
 
+        //
+
     }
+
+    /*public static void voteFoodItem(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+        List<Integer> votedItemIds = new ArrayList<>();
+        System.out.println("Enter the IDs of the food items to vote for");
+        String[] inputIds = scanner.nextLine().split(",");
+        for (String inputId : inputIds) {
+            votedItemIds.add(Integer.parseInt(inputId.trim()));
+        }
+        String votedItemIdsJson = gson.toJson(votedItemIds);
+        out.println(votedItemIdsJson);
+
+        String response = in.readLine();
+        System.out.println(response);
+
+    }*/
 
     public static void giveFeedback(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , int userId) throws Exception {
         Feedback feedback = new Feedback();

@@ -27,7 +27,7 @@ public class RecommendationService {
     }
 
     public List<FoodItem> getAllFoodItems(RecommendedDTO recommendedDTO) throws SQLException {
-        List<FoodItem> allTopFoodItems = new ArrayList<>();
+      /*  List<FoodItem> allTopFoodItems = new ArrayList<>();
         List<String> mealTypes = List.of("Breakfast", "Lunch", "Dinner");
         for (String mealType : mealTypes) {
             List<FoodItem> topFoodItems = foodItemRepository.getTopFoodItems(mealType);
@@ -36,7 +36,10 @@ public class RecommendationService {
 
         votedItemRepository.insertFoodItemsToVotedItems(allTopFoodItems);
 
-        return allTopFoodItems;
+        return allTopFoodItems;*/
+        List<FoodItem> topFoodItems = foodItemRepository.getTopFoodItems(recommendedDTO.getMealType(),recommendedDTO.getNumberOfItems());
+        votedItemRepository.insertFoodItemsToVotedItems(topFoodItems);
+        return topFoodItems;
     }
 
     public String getRecommendation() throws SQLException {
