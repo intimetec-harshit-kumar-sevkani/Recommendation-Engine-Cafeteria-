@@ -72,6 +72,9 @@ public class ClientHandler implements Runnable {
                     case "GET_VOTED_ITEMS":
                         handleRollOutItems(in,out);
                         break;
+                    case "VIEW_NOTIFICATION":
+                        handleNotifications(in,out);
+                        break;
                     default:
                         System.out.println("Unknown message type received: " + messageType.type);
                 }
@@ -91,14 +94,19 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleLogin(BufferedReader in, PrintWriter out) throws Exception {
-        String loginMessageJson = in.readLine();
-        LoginMessage loginMessage = gson.fromJson(loginMessageJson, LoginMessage.class);
-        System.out.println("Received login info: " + loginMessage.getEmail());
+       try {
+           String loginMessageJson = in.readLine();
+           LoginMessage loginMessage = gson.fromJson(loginMessageJson, LoginMessage.class);
+           System.out.println("Received login info: " + loginMessage.getEmail());
 
-        RoleMessage roleMessage = authController.login(loginMessage.getEmail(), loginMessage.getName());
+           RoleMessage roleMessage = authController.login(loginMessage.getEmail(), loginMessage.getName());
 
-        String roleJson = gson.toJson(roleMessage);
-        out.println(roleJson);
+           String roleJson = gson.toJson(roleMessage);
+           out.println(roleJson);
+       }
+       catch (Exception ex) {
+
+       }
     }
 
     private void handleAddFoodItem(BufferedReader in, PrintWriter out) throws IOException {
@@ -171,6 +179,12 @@ public class ClientHandler implements Runnable {
         Feedback feedback = gson.fromJson(feedbackJson, Feedback.class);
         employeeController.addFeedback(feedback);
         out.println("Feedback added Successfully");
+    }
+
+    private void handleNotifications(BufferedReader in, PrintWriter out) throws IOException, SQLException {
+        List<Notification> notifications = employeeController.getNotification();
+        String notificationJson = gson.toJson(notifications);
+        out.println(notificationJson);
     }
 
     public String getClientInfo() {

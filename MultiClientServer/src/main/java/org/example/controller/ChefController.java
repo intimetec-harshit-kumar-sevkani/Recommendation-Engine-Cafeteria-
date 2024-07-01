@@ -3,6 +3,7 @@ package org.example.controller;
 import org.example.model.FoodItem;
 import org.example.model.RecommendedDTO;
 import org.example.model.RollOutFoodItemsDTO;
+import org.example.service.NotificationService;
 import org.example.service.RecommendationService;
 import org.example.service.VotedItemService;
 
@@ -16,9 +17,12 @@ public class ChefController {
 
     private VotedItemService votedItemService;
 
+    private NotificationService notificationService;
+
     public ChefController() throws SQLException {
         this.recommendationService = new RecommendationService();
         this.votedItemService = new VotedItemService();
+        this.notificationService = new NotificationService();
     }
 
     public String getTopFoodItems(RecommendedDTO recommendedDTO) {
@@ -38,6 +42,7 @@ public class ChefController {
     public String rollOutItems(List<Integer> votedFoodItems) {
         try {
             votedItemService.rollOutFoodItems(votedFoodItems);
+            notificationService.sendNotification(votedFoodItems,"RollOut Menu");
             return "Food item Roll Out successfully.";
         } catch (SQLException e) {
             return "Error: " + e.getMessage();

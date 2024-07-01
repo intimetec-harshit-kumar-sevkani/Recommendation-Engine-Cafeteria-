@@ -11,6 +11,7 @@ import org.example.handlers.EmployeeHandler;
 import org.example.models.LoginMessage;
 import org.example.models.MessageType;
 import org.example.models.RoleMessage;
+/*
 
 public class Client {
     private static final String SERVER_ADDRESS = "localhost";
@@ -89,4 +90,69 @@ public class Client {
         }
     }
 }
+*/
+
+import org.example.utils.MenuUtils;
+import org.example.utils.MessageUtils;
+
+public class Client {
+    private static final String SERVER_ADDRESS = "localhost";
+    private static final int SERVER_PORT = 12345;
+
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.start();
+    }
+
+    public void start() {
+        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+             PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+
+            Scanner scanner = new Scanner(System.in);
+            Gson gson = new Gson();
+
+            MessageUtils.sendMessage(out, gson, new MessageType("LOGIN"));
+
+            System.out.println("Enter your email:");
+            String email = scanner.nextLine();
+            System.out.println("Enter your name:");
+            String name = scanner.nextLine();
+
+            MessageUtils.sendMessage(out, gson, new LoginMessage(email, name));
+
+            RoleMessage roleMessage = MessageUtils.receiveMessage(in, gson, RoleMessage.class);
+            String role = roleMessage.getRole();
+            int userId = roleMessage.getUserId();
+            System.out.println("Role: " + role);
+            System.out.println("UserId: " + userId);
+
+            boolean exit = false;
+            while (!exit) {
+                System.out.println(MenuUtils.getMenuForRole(role));
+                String selection = scanner.nextLine();
+
+                switch (role) {
+                    case "Admin":
+                        exit = AdminHandler.handleSelection(selection, scanner, out, in, gson);
+                        break;
+                    case "Chef":
+                        exit = ChefHandler.handleSelection(selection, scanner, out, in, gson);
+                        break;
+                    case "Employee":
+                        exit = EmployeeHandler.handleSelection(selection, scanner, out, in, gson, userId);
+                        break;
+                    default:
+                        System.out.println("Unknown role.");
+                        exit = true;
+                }
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Client exception: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+}
+
 

@@ -14,7 +14,7 @@ public class AuthenticationService {
         this.repository = new AuthenticationRepository();
     }
 
-    public RoleMessage authenticate(String email, String name) {
+    public RoleMessage authenticate(String email, String name) throws SQLException {
         User user = repository.findUserByEmailAndName(email, name);
         if (user != null) {
             Role role = repository.findRoleById(user.getRoleId());

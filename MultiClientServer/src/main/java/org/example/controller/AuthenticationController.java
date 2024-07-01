@@ -13,7 +13,7 @@ public class AuthenticationController {
         this.service = new AuthenticationService();
     }
 
-    public RoleMessage login(String email, String name) {
+    public RoleMessage login(String email, String name) throws SQLException {
         return service.authenticate(email, name);
     }
 }

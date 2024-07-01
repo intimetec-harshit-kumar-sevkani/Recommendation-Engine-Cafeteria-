@@ -2,9 +2,7 @@ package org.example.handlers;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.example.models.Feedback;
-import org.example.models.FoodItem;
-import org.example.models.MessageType;
+import org.example.models.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+/*
 
 public class EmployeeHandler {
 
@@ -50,9 +49,6 @@ public class EmployeeHandler {
         String voteItemJson = in.readLine();
         List<FoodItem> votedItemList = gson.fromJson(voteItemJson, new TypeToken<List<FoodItem>>(){}.getType());
         votedItemList.forEach(System.out::println);
-
-        //
-
         List<Integer> votedItemIds = new ArrayList<>();
         System.out.println("Enter the IDs of the food items to vote for");
         String[] inputIds = scanner.nextLine().split(",");
@@ -61,28 +57,9 @@ public class EmployeeHandler {
         }
         String votedItemIdsJson = gson.toJson(votedItemIds);
         out.println(votedItemIdsJson);
-
         String response = in.readLine();
         System.out.println(response);
-
-        //
-
     }
-
-    /*public static void voteFoodItem(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson) throws IOException {
-        List<Integer> votedItemIds = new ArrayList<>();
-        System.out.println("Enter the IDs of the food items to vote for");
-        String[] inputIds = scanner.nextLine().split(",");
-        for (String inputId : inputIds) {
-            votedItemIds.add(Integer.parseInt(inputId.trim()));
-        }
-        String votedItemIdsJson = gson.toJson(votedItemIds);
-        out.println(votedItemIdsJson);
-
-        String response = in.readLine();
-        System.out.println(response);
-
-    }*/
 
     public static void giveFeedback(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , int userId) throws Exception {
         Feedback feedback = new Feedback();
@@ -93,9 +70,6 @@ public class EmployeeHandler {
         System.out.println("Enter Comment : ");
         String comment = scanner.next();
         feedback.setComment(comment);
-        //LocalDate localDate = LocalDate.now();
-       // Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        //feedback.setDate(localDate);
         feedback.setUserId(userId);
         feedback.setDelete(false);
         String feedbackJson = gson.toJson(feedback);
@@ -110,3 +84,97 @@ public class EmployeeHandler {
         foodItems.forEach(System.out::println);
     }
 }
+*/
+
+
+import com.google.gson.Gson;
+import org.example.utils.MessageUtils;
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Scanner;
+
+public class EmployeeHandler {
+
+    public static boolean handleSelection(String selection, Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
+        switch (selection) {
+            case "1":
+                handleViewAllFoodItems(out, in, gson);
+                return false;
+            case "2":
+                handleGiveFeedback(scanner, out, in, gson, userId);
+                return false;
+            case "3":
+                handleGiveVote(scanner, out, in, gson, userId);
+                return false;
+            case "4":
+                System.out.println("Exiting...");
+                return true;
+            case "5":
+                handleNotification(scanner, out, in, gson, userId);
+                return false;
+            default:
+                System.out.println("Invalid selection.");
+                return false;
+        }
+    }
+
+    private static void handleViewAllFoodItems(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_ALL_FOOD_ITEMS"));
+
+        List<FoodItem> foodItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
+        foodItems.forEach(System.out::println);
+    }
+
+    private static void handleGiveFeedback(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
+        MessageUtils.sendMessage(out, gson, new MessageType("GIVE_FEEDBACK"));
+
+        Feedback feedback = new Feedback();
+        System.out.println("Enter food Item Id : ");
+        feedback.setFoodItemId(scanner.nextInt());
+        scanner.nextLine(); // consume the newline
+        System.out.println("Enter Rating (0-5) : ");
+        feedback.setRating(scanner.nextDouble());
+        scanner.nextLine(); // consume the newline
+        System.out.println("Enter Comment : ");
+        String comment = scanner.nextLine();
+        feedback.setComment(comment);
+        feedback.setUserId(userId);
+        feedback.setDelete(false);
+
+        MessageUtils.sendMessage(out, gson, feedback);
+        System.out.println(MessageUtils.receiveMessage(in));
+    }
+
+    private static void handleGiveVote(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
+        MessageUtils.sendMessage(out, gson, new MessageType("VOTE_RECOMMENDED_ITEMS"));
+        System.out.println("Enter Meal Type : ");
+        String mealType = scanner.nextLine();
+        out.println(mealType);
+        String voteItemJson = in.readLine();
+        List<FoodItem> votedItemList = gson.fromJson(voteItemJson, new TypeToken<List<FoodItem>>(){}.getType());
+        votedItemList.forEach(System.out::println);
+        List<Integer> votedItemIds = new ArrayList<>();
+        System.out.println("Enter the IDs of the food items to vote for");
+        String[] inputIds = scanner.nextLine().split(",");
+        for (String inputId : inputIds) {
+            votedItemIds.add(Integer.parseInt(inputId.trim()));
+        }
+        String votedItemIdsJson = gson.toJson(votedItemIds);
+        out.println(votedItemIdsJson);
+        String response = in.readLine();
+        System.out.println(response);
+
+    }
+
+    private static void handleNotification(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
+        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_NOTIFICATION"));
+        String notificationJson = in.readLine();
+        List<Notification> notifications = gson.fromJson(notificationJson, new TypeToken<List<Notification>>(){}.getType());
+        notifications.forEach(System.out::println);
+    }
+}
+
