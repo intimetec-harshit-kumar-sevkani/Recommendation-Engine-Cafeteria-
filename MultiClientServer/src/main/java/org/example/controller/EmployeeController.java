@@ -3,7 +3,6 @@ package org.example.controller;
 import org.example.model.Feedback;
 import org.example.model.FoodItem;
 import org.example.model.Notification;
-import org.example.model.VotedItem;
 import org.example.service.FeedbackService;
 import org.example.service.NotificationService;
 import org.example.service.VotedItemService;

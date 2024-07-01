@@ -111,11 +111,14 @@ public class EmployeeHandler {
                 handleGiveVote(scanner, out, in, gson, userId);
                 return false;
             case "4":
-                System.out.println("Exiting...");
-                return true;
-            case "5":
                 handleNotification(scanner, out, in, gson, userId);
                 return false;
+            case "5":
+                handleTodayMenuItems(out, in, gson);
+                return false;
+            case "6":
+                System.out.println("Exiting...");
+                return true;
             default:
                 System.out.println("Invalid selection.");
                 return false;
@@ -176,5 +179,14 @@ public class EmployeeHandler {
         List<Notification> notifications = gson.fromJson(notificationJson, new TypeToken<List<Notification>>(){}.getType());
         notifications.forEach(System.out::println);
     }
+
+    private static void handleTodayMenuItems(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_TODAY_MENU"));
+
+        String foodItemJson = in.readLine();
+        List<FoodItem> foodItems =  gson.fromJson(foodItemJson, new TypeToken<List<FoodItem>>(){}.getType());
+        foodItems.forEach(System.out::println);
+    }
+
 }
 

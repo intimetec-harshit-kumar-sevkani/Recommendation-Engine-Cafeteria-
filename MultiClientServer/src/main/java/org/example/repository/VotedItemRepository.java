@@ -16,7 +16,7 @@ public class VotedItemRepository {
         this.connection = SQLDataSourceConfig.getConnection();
     }
 
-    public void insertFoodItemsToVotedItems(List<FoodItem> foodItems) throws SQLException {
+   /* public void insertFoodItemsToVotedItems(List<FoodItem> foodItems) throws SQLException {
         String sql = "INSERT INTO VotedItems (FoodItemId, Vote, Date, IsPrepared, IsDelete) VALUES (?, 0, NOW(), false, false)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (FoodItem foodItem : foodItems) {
@@ -25,7 +25,28 @@ public class VotedItemRepository {
             }
             stmt.executeBatch();
         }
+    }*/
+
+    public void insertFoodItemsToVotedItems(List<FoodItem> foodItems) throws SQLException {
+        String checkSql = "SELECT COUNT(*) FROM VotedItems WHERE FoodItemId = ? AND DATE(Date) = CURDATE()";
+        String insertSql = "INSERT INTO VotedItems (FoodItemId, Vote, Date, IsPrepared, IsDelete) VALUES (?, 0, NOW(), false, false)";
+
+        try (PreparedStatement checkStmt = connection.prepareStatement(checkSql);
+             PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
+
+            for (FoodItem foodItem : foodItems) {
+                checkStmt.setInt(1, foodItem.getId());
+                try (ResultSet rs = checkStmt.executeQuery()) {
+                    if (rs.next() && rs.getInt(1) == 0) {
+                        insertStmt.setInt(1, foodItem.getId());
+                        insertStmt.addBatch();
+                    }
+                }
+            }
+            insertStmt.executeBatch();
+        }
     }
+
 
     public void voteFoodItems(List<Integer> foodItemIds) throws SQLException {
         String sql = "UPDATE VotedItems " +

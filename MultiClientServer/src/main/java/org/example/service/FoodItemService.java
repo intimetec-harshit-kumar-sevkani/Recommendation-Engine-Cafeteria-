@@ -7,21 +7,29 @@ import org.example.repository.FoodItemRepository;
 
 public class FoodItemService {
     private FoodItemRepository foodItemRepository;
+    private NotificationService notificationService;
 
     public FoodItemService() throws SQLException {
         this.foodItemRepository = new FoodItemRepository();
+        this.notificationService = new NotificationService();
     }
 
     public void addFoodItem(FoodItem foodItem) throws SQLException {
-        foodItemRepository.addFoodItem(foodItem);
+        int generatedId = foodItemRepository.addFoodItem(foodItem);
+        notificationService.sendNotification("FoodItem Update", "Food Item Added", generatedId);
+
     }
 
     public void updateFoodItem(FoodItem foodItem) throws SQLException {
         foodItemRepository.updateFoodItem(foodItem);
+        notificationService.sendNotification("FoodItem Update", "Food Item Updated", foodItem.getId());
+
     }
 
     public void deleteFoodItem(int id) throws SQLException {
         foodItemRepository.deleteFoodItem(id);
+        notificationService.sendNotification("FoodItem Update", "Food Item Deleted", id);
+
     }
 
     public List<FoodItem> getAllFoodItems() throws SQLException {

@@ -2,10 +2,7 @@ package org.example.handlers;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.example.models.FoodItem;
-import org.example.models.MessageType;
-import org.example.models.RecommendedDTO;
-import org.example.models.RollOutFoodItemsDTO;
+import org.example.models.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -112,11 +109,13 @@ public class ChefHandler {
                 handleViewAllFoodItems(out, in, gson);
                 return false;
             case "3":
-                System.out.println("Exiting...");
-                return true;
-            case "4":
                 handleRollOutFoodItems(scanner, out, in, gson);
                 return false;
+            case "4" :
+                handleViewNotification(out, in, gson);
+            case "5":
+                System.out.println("Exiting...");
+                return true;
             default:
                 System.out.println("Invalid selection.");
                 return false;
@@ -165,4 +164,12 @@ public class ChefHandler {
         List<FoodItem> foodItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
         foodItems.forEach(System.out::println);
     }
+
+    private static void handleViewNotification(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_NOTIFICATION"));
+        String notificationJson = in.readLine();
+        List<Notification> notifications = gson.fromJson(notificationJson, new TypeToken<List<Notification>>(){}.getType());
+        notifications.forEach(System.out::println);
+    }
+
 }

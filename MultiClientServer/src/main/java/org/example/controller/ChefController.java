@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.model.FoodItem;
+import org.example.model.Notification;
 import org.example.model.RecommendedDTO;
 import org.example.model.RollOutFoodItemsDTO;
 import org.example.service.NotificationService;
@@ -47,6 +48,9 @@ public class ChefController {
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
+    }
+    public List<Notification> getNotification() throws SQLException {
+        return notificationService.getNotification();
     }
 
 }

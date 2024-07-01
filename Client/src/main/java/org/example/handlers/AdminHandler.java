@@ -98,6 +98,7 @@ public class AdminHandler {
 }*/
 
 
+import org.example.models.Notification;
 import org.example.utils.MessageUtils;
 
 
@@ -124,6 +125,9 @@ public class AdminHandler {
                 handleViewAllFoodItems(out, in, gson);
                 return false;
             case "5":
+                handleViewNotification(out, in , gson);
+                return false;
+            case "6":
                 System.out.println("Exiting...");
                 return true;
             default:
@@ -186,4 +190,11 @@ public class AdminHandler {
         List<FoodItem> foodItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
         foodItems.forEach(System.out::println);
     }
+    private static void handleViewNotification(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_NOTIFICATION"));
+        String notificationJson = in.readLine();
+        List<Notification> notifications = gson.fromJson(notificationJson, new TypeToken<List<Notification>>(){}.getType());
+        notifications.forEach(System.out::println);
+    }
+
 }

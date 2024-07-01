@@ -2,7 +2,9 @@ package org.example.controller;
 
 
 import org.example.model.FoodItem;
+import org.example.model.Notification;
 import org.example.service.FoodItemService;
+import org.example.service.NotificationService;
 import org.example.util.JsonUtil;
 
 
@@ -19,8 +21,11 @@ import static org.example.util.JsonUtil.gson;
 public class FoodItemController {
     private FoodItemService foodItemService;
 
+    private NotificationService notificationService;
+
     public FoodItemController() throws SQLException {
         this.foodItemService = new FoodItemService();
+        this.notificationService = new NotificationService();
     }
 
     public String addFoodItem(FoodItem newFoodItem) {
@@ -58,4 +63,8 @@ public class FoodItemController {
             return "Error: " + e.getMessage();
         }
     }
+    public List<Notification> getNotification() throws SQLException {
+        return notificationService.getNotification();
+    }
+
 }

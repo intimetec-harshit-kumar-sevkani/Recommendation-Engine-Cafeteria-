@@ -37,7 +37,7 @@ public class NotificationRepository {
         }
     }
 
-    private int getNotificationTypeId(String notificationType) throws SQLException {
+    public int getNotificationTypeId(String notificationType) throws SQLException {
         String sql = "SELECT Id FROM NotificationTypes WHERE Type = ? AND IsDelete = 0";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, notificationType);
@@ -103,6 +103,15 @@ public class NotificationRepository {
         }
 
         return notifications;
+    }
+
+    public void addNotification(int notificationTypeId, String message) throws SQLException {
+        String sql = "INSERT INTO Notifications (NotificationTypeId, Message, IsDelete, Date) VALUES (?, ?, 0, NOW())";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, notificationTypeId);
+            stmt.setString(2, message);
+            stmt.executeUpdate();
+        }
     }
 
 }

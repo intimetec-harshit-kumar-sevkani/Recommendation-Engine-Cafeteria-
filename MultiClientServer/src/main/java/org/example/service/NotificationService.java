@@ -21,4 +21,15 @@ public class NotificationService {
     public List<Notification> getNotification() throws SQLException {
         return notificationRepository.getValidNotifications();
     }
+
+    public void sendNotification(String notificationType, String task, int foodItemId) throws SQLException {
+        int notificationTypeId = notificationRepository.getNotificationTypeId(notificationType);
+        if (notificationTypeId != -1) {
+            String message = task + ": " + foodItemId;
+            notificationRepository.addNotification(notificationTypeId, message);
+        } else {
+            System.out.println("Invalid notification type: " + notificationType);
+        }
+    }
+
 }

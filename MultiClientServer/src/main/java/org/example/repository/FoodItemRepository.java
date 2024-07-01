@@ -1,10 +1,8 @@
 package org.example.repository;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.example.Config.SQLDataSourceConfig;
 import org.example.model.FoodItem;
 
@@ -15,7 +13,7 @@ public class FoodItemRepository {
         this.connection = SQLDataSourceConfig.getConnection();
     }
 
-    public void addFoodItem(FoodItem foodItem) throws SQLException {
+   /* public void addFoodItem(FoodItem foodItem) throws SQLException {
         String sql = "INSERT INTO FoodItems (MealTypeId, Name, Price, IsAvailable, IsDelete) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, foodItem.getMealTypeId());
@@ -25,7 +23,26 @@ public class FoodItemRepository {
             stmt.setBoolean(5, foodItem.isDelete());
             stmt.executeUpdate();
         }
-    }
+    }*/
+   public int addFoodItem(FoodItem foodItem) throws SQLException {
+       String sql = "INSERT INTO FoodItems (MealTypeId, Name, Price, IsAvailable, IsDelete) VALUES (?, ?, ?, ?, ?)";
+       try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+           stmt.setInt(1, foodItem.getMealTypeId());
+           stmt.setString(2, foodItem.getName());
+           stmt.setBigDecimal(3, foodItem.getPrice());
+           stmt.setBoolean(4, foodItem.isAvailable());
+           stmt.setBoolean(5, foodItem.isDelete());
+           stmt.executeUpdate();
+
+           try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+               if (generatedKeys.next()) {
+                   return generatedKeys.getInt(1);
+               } else {
+                   throw new SQLException("Creating food item failed, no ID obtained.");
+               }
+           }
+       }
+   }
 
     public void updateFoodItem(FoodItem foodItem) throws SQLException {
         String sql = "UPDATE FoodItems SET MealTypeId = ?, Name = ?, Price = ?, IsAvailable = ?, IsDelete = ? WHERE Id = ?";
