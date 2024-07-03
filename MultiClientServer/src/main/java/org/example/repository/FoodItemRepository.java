@@ -74,7 +74,7 @@ public class FoodItemRepository {
         return foodItems;
     }
 
-    public List<FoodItem> getTopFoodItems(String mealType, int numberOfItems) throws SQLException {
+    public List<FoodItem> getRecommendedFoodItems(String mealType, int numberOfItems) throws SQLException {
         String sql = "SELECT fi.* " +
                 "FROM FoodItemAudit fia " +
                 "JOIN FoodItems fi ON fia.FoodItemId = fi.Id " +

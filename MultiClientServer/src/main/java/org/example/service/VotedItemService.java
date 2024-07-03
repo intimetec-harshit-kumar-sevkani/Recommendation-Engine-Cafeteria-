@@ -23,20 +23,18 @@ public class VotedItemService {
         votedItemRepository.markFoodItemsAsPrepared(votedItemIds);
     }
 
-    public List<RollOutFoodItemsDTO> viewRollOutFoodItem(String mealType) throws SQLException {
+    public List<RollOutFoodItemsDTO> viewVotedFoodItem(String mealType) throws SQLException {
         List<RollOutFoodItemsDTO> rollOutFoodItemsDTOList = votedItemRepository.getRollOutItem(mealType);
         return rollOutFoodItemsDTOList;
     }
 
-
-
     public List<FoodItem> viewFoodItem(String mealType) throws SQLException {
-        List<FoodItem>foodItems = votedItemRepository.getFoodItemsVotedToday(mealType);
+        List<FoodItem>foodItems = votedItemRepository.getFoodItemsForVote(mealType);
         return foodItems;
     }
 
-    public List<FoodItem> getPreparedFoodItemsFromYesterday() throws SQLException {
-        List<Integer> foodItemIds = votedItemRepository.getPreparedFoodItemIdsFromYesterday();
+    public List<FoodItem> getPreparedFoodItems() throws SQLException {
+        List<Integer> foodItemIds = votedItemRepository.getPreparedFoodItemIds();
         return votedItemRepository.getFoodItemsByIds(foodItemIds);
     }
 

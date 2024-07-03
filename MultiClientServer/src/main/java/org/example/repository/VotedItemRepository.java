@@ -16,7 +16,7 @@ public class VotedItemRepository {
     public VotedItemRepository() throws SQLException {
         this.connection = SQLDataSourceConfig.getConnection();
     }
-    public void insertFoodItemsToVotedItems(List<FoodItem> foodItems) throws SQLException {
+    public void addVotedItems(List<FoodItem> foodItems) throws SQLException {
         String checkSql = "SELECT COUNT(*) FROM VotedItems WHERE FoodItemId = ? AND DATE(Date) = CURDATE()";
         String insertSql = "INSERT INTO VotedItems (FoodItemId, Vote, Date, IsPrepared, IsDelete) VALUES (?, 0, NOW(), false, false)";
 
@@ -50,31 +50,6 @@ public class VotedItemRepository {
         }
     }
 
-    public List<FoodItem> getTopVotedFoodItems() throws SQLException {
-        String sql = "SELECT fi.*, SUM(vi.Vote) AS totalVotes " +
-                "FROM VotedItems vi " +
-                "JOIN FoodItems fi ON vi.FoodItemId = fi.Id " +
-                "WHERE vi.IsDelete = false " +
-                "GROUP BY vi.FoodItemId " +
-                "ORDER BY totalVotes DESC " +
-                "LIMIT 3";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            List<FoodItem> topFoodItems = new ArrayList<>();
-            while (rs.next()) {
-                FoodItem foodItem = new FoodItem();
-                foodItem.setId(rs.getInt("Id"));
-                foodItem.setMealTypeId(rs.getInt("MealTypeId"));
-                foodItem.setName(rs.getString("Name"));
-                foodItem.setPrice(rs.getBigDecimal("Price"));
-                foodItem.setAvailable(rs.getBoolean("IsAvailable"));
-                foodItem.setDelete(rs.getBoolean("IsDelete"));
-                topFoodItems.add(foodItem);
-            }
-            return topFoodItems;
-        }
-    }
-
     public void markFoodItemsAsPrepared(List<Integer> foodItemIds) throws SQLException {
         String sql = "UPDATE VotedItems SET IsPrepared = true WHERE FoodItemId = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -85,7 +60,7 @@ public class VotedItemRepository {
             stmt.executeBatch();
         }
     }
-    public List<FoodItem> getFoodItemsVotedToday(String mealType) throws SQLException {
+    public List<FoodItem> getFoodItemsForVote(String mealType) throws SQLException {
         String getMealTypeIdSql = "SELECT Id FROM mealtypes WHERE Type = ? AND IsDelete = 0";
 
         int mealTypeId;
@@ -167,7 +142,7 @@ public class VotedItemRepository {
     }
 
 
-    public List<Integer> getPreparedFoodItemIdsFromYesterday() throws SQLException  {
+    public List<Integer> getPreparedFoodItemIds() throws SQLException  {
         List<Integer> foodItemIds = new ArrayList<>();
         try (
                 PreparedStatement stmt = connection.prepareStatement(
@@ -186,9 +161,7 @@ public class VotedItemRepository {
             while (rs.next()) {
                 foodItemIds.add(rs.getInt("FoodItemId"));
             }
-        } /*catch (SQLException e) {
-            e.printStackTrace();
-        }*/
+        }
         return foodItemIds;
     }
 
@@ -215,9 +188,7 @@ public class VotedItemRepository {
                 foodItem.setDelete(rs.getBoolean("IsDelete"));
                 foodItems.add(foodItem);
             }
-        } /*catch (SQLException e) {
-            e.printStackTrace();
-        }*/
+        }
         return foodItems;
     }
 

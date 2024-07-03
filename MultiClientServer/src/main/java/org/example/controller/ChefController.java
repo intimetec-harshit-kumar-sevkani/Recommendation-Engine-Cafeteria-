@@ -26,31 +26,44 @@ public class ChefController {
         this.notificationService = new NotificationService();
     }
 
-    public String getTopFoodItems(RecommendedDTO recommendedDTO) {
+    public String getRecommendedFoodItems(RecommendedDTO recommendedDTO) {
         try {
-            List<FoodItem> foodItems = recommendationService.getAllFoodItems(recommendedDTO);
+            List<FoodItem> foodItems = recommendationService.getRecommendedFoodItems(recommendedDTO);
             return gson.toJson(foodItems);
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
     }
 
-    public List<RollOutFoodItemsDTO> getRollOutFoodItemsDTOList(String mealType) throws SQLException {
-        List<RollOutFoodItemsDTO> foodItems = votedItemService.viewRollOutFoodItem(mealType);
-        return foodItems;
+    public String getVotedItems(String mealType)  {
+        try {
+            List<RollOutFoodItemsDTO> foodItems = votedItemService.viewVotedFoodItem(mealType);
+            String foodItemJson = gson.toJson(foodItems);
+            return foodItemJson;
+        }
+        catch (SQLException e) {
+            return "Error: " + e.getMessage();
+        }
     }
 
-    public String rollOutItems(List<Integer> votedFoodItems) {
+    public String rollOutFoodItems(List<Integer> FoodItems) {
         try {
-            votedItemService.rollOutFoodItems(votedFoodItems);
-            notificationService.sendNotification(votedFoodItems,"RollOut Menu");
+            votedItemService.rollOutFoodItems(FoodItems);
+            notificationService.sendNotification(FoodItems,"RollOut Menu");
             return "Food item Roll Out successfully.";
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
     }
-    public List<Notification> getNotification() throws SQLException {
-        return notificationService.getNotification();
+    public String getNotification() {
+        try {
+            List<Notification> notifications = notificationService.getNotification();
+            String notificationJson = gson.toJson(notifications);
+            return notificationJson;
+        }
+        catch (SQLException e) {
+            return "Error: " + e.getMessage();
+        }
     }
 
 }

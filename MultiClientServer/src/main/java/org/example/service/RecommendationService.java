@@ -13,9 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RecommendationService {
-
     private FoodItemRepository foodItemRepository;
-
     private FeedbackRepository feedbackRepository;
     private VotedItemRepository votedItemRepository;
 
@@ -25,25 +23,21 @@ public class RecommendationService {
         this.feedbackRepository = new FeedbackRepository();
     }
 
-    public List<FoodItem> getAllFoodItems(RecommendedDTO recommendedDTO) throws SQLException {
-        List<FoodItem> topFoodItems = foodItemRepository.getTopFoodItems(recommendedDTO.getMealType(),recommendedDTO.getNumberOfItems());
-        votedItemRepository.insertFoodItemsToVotedItems(topFoodItems);
+    public List<FoodItem> getRecommendedFoodItems(RecommendedDTO recommendedDTO) throws SQLException {
+        List<FoodItem> topFoodItems = foodItemRepository.getRecommendedFoodItems(recommendedDTO.getMealType(),recommendedDTO.getNumberOfItems());
+        votedItemRepository.addVotedItems(topFoodItems);
         return topFoodItems;
     }
 
-    public String getRecommendation() throws SQLException {
-        List<FoodItemRating> foodItemRatings = feedbackRepository.getFoodItemRatingsForToday();
+    public void updateRating(int foodItemId) throws SQLException {
+        List<FoodItemRating> foodItemRatings = feedbackRepository.getFoodItemRatings(foodItemId);
 
         for (FoodItemRating foodItemRating : foodItemRatings) {
             List<String> comments = Arrays.asList(foodItemRating.getComments().split(", "));
-
             double averageSentiment = SentimentAnalyzer.getAverageRating(comments);
             feedbackRepository.updateItemAudit(foodItemRating, averageSentiment);
         }
 
-        return "update audit successfully";
     }
-
-
 
 }

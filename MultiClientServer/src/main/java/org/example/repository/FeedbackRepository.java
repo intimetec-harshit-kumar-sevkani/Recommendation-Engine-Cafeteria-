@@ -18,22 +18,24 @@ public class FeedbackRepository {
     public FeedbackRepository() throws SQLException {
         this.connection = SQLDataSourceConfig.getConnection();
     }
-
-    public List<FoodItemRating> getFoodItemRatingsForToday() throws SQLException {
+    public List<FoodItemRating> getFoodItemRatings(int foodItemId) throws SQLException {
         String sql = "SELECT FoodItemId, AVG(Rating) AS average_rating, GROUP_CONCAT(Comment SEPARATOR ', ') AS comments " +
-                "FROM Feedbacks " +
-                "WHERE Date = CURDATE() " +
+                "FROM feedbacks " +
+                "WHERE Date = CURDATE() AND FoodItemId = ? " +
                 "GROUP BY FoodItemId";
         List<FoodItemRating> foodItemRatings = new ArrayList<>();
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                FoodItemRating foodItemRating = new FoodItemRating();
-                foodItemRating.setFoodItemId(((ResultSet) rs).getInt("FoodItemId"));
-                foodItemRating.setAverageRating(rs.getDouble("average_rating"));
-                foodItemRating.setComments(rs.getString("comments"));
-                foodItemRatings.add(foodItemRating);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, foodItemId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    FoodItemRating foodItemRating = new FoodItemRating();
+                    foodItemRating.setFoodItemId(rs.getInt("FoodItemId"));
+                    foodItemRating.setAverageRating(rs.getDouble("average_rating"));
+                    foodItemRating.setComments(rs.getString("comments"));
+                    foodItemRatings.add(foodItemRating);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Database error occurred while fetching food item ratings for today", e);
@@ -43,8 +45,9 @@ public class FeedbackRepository {
     }
 
 
+
     public void updateItemAudit(FoodItemRating foodItemRating, double averageSentiment) throws SQLException {
-        String sql = "UPDATE FoodItemAudit SET Rating = ?, Sentiment = ? WHERE FoodItemId = ?";
+        String sql = "UPDATE fooditemaudit SET Rating = ?, Sentiment = ? WHERE FoodItemId = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setDouble(1, foodItemRating.getAverageRating());

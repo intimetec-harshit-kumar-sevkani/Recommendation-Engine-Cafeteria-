@@ -13,7 +13,7 @@ public class FoodItemAuditRepository {
         this.connection = SQLDataSourceConfig.getConnection();
     }
 
-    public void insertIntoFoodAudit(int foodItemId) throws SQLException {
+    public void addFoodAudit(int foodItemId) throws SQLException {
         String sql = "INSERT INTO fooditemaudit (FoodItemId, Rating, Vote, Sentiment, Prepared) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, foodItemId);

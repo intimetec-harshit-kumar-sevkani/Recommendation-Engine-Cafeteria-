@@ -11,10 +11,7 @@ import org.example.utils.MessageUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EmployeeHandler {
@@ -74,36 +71,46 @@ public class EmployeeHandler {
 
     private static void handleGiveVote(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
         MessageUtils.sendMessage(out, gson, new MessageType("VOTE_RECOMMENDED_ITEMS"));
+
+        Set<String> validMealTypes = new HashSet<>(Arrays.asList("Breakfast", "Lunch", "Dinner"));
+
         System.out.println("Enter Meal Type : ");
         String mealType = scanner.nextLine();
-        out.println(mealType);
-        String voteItemJson = in.readLine();
-        List<FoodItem> votedItemList = gson.fromJson(voteItemJson, new TypeToken<List<FoodItem>>(){}.getType());
-        votedItemList.forEach(System.out::println);
+        if(validMealTypes.contains(mealType)) {
+            out.println(mealType);
+            String voteItemJson = in.readLine();
+            List<FoodItem> votedItemList = gson.fromJson(voteItemJson, new TypeToken<List<FoodItem>>() {
+            }.getType());
+            votedItemList.forEach(System.out::println);
 
-        Set<Integer> validIds = votedItemList.stream().map(FoodItem::getId).collect(Collectors.toSet());
+            Set<Integer> validIds = votedItemList.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
 
-        List<Integer> votedItemIds = new ArrayList<>();
-        System.out.println("Enter the IDs of the food items to vote for");
-        String[] inputIds = scanner.nextLine().split(",");
+            List<Integer> votedItemIds = new ArrayList<>();
+            System.out.println("Enter the IDs of the food items to vote for");
+            String[] inputIds = scanner.nextLine().split(",");
 
-        for (String inputId : inputIds) {
-            int id = Integer.parseInt(inputId.trim());
-            if (validIds.contains(id)) {
-                votedItemIds.add(id);
-            } else {
-                System.out.println("Invalid item ID: " + id);
+            for (String inputId : inputIds) {
+                int id = Integer.parseInt(inputId.trim());
+                if (validIds.contains(id)) {
+                    votedItemIds.add(id);
+                } else {
+                    System.out.println("Invalid item ID: " + id);
+                }
             }
-        }
 
-        if (votedItemIds.isEmpty()) {
-            System.out.println("No valid IDs entered. Exiting.");
-        } else {
-            String votedItemIdsJson = gson.toJson(votedItemIds);
-            out.println(votedItemIdsJson);
-            String response = in.readLine();
-            System.out.println(response);
+            if (votedItemIds.isEmpty()) {
+                out.println("No valid IDs");
+                System.out.println(MessageUtils.receiveMessage(in));
+            } else {
+                String votedItemIdsJson = gson.toJson(votedItemIds);
+                out.println(votedItemIdsJson);
+                String response = in.readLine();
+                System.out.println(response);
+            }
+        }else {
+            out.println("Invalid Meal Type");
+            System.out.println(MessageUtils.receiveMessage(in));
         }
 
     }

@@ -10,7 +10,7 @@ import org.example.handlers.ChefHandler;
 import org.example.handlers.EmployeeHandler;
 import org.example.models.LoginMessage;
 import org.example.models.MessageType;
-import org.example.models.RoleMessage;
+import org.example.models.RoleMessageDTO;
 
 
 import org.example.utils.MenuUtils;
@@ -55,13 +55,10 @@ public class Client {
 
                             MessageUtils.sendMessage(out, gson, new LoginMessage(email, name));
 
-                            RoleMessage roleMessage = MessageUtils.receiveMessage(in, gson, RoleMessage.class);
-                            if (roleMessage != null) {
-                                role = roleMessage.getRole();
-                                userId = roleMessage.getUserId();
-                                System.out.println("Role: " + role);
-                                System.out.println("UserId: " + userId);
-
+                            RoleMessageDTO roleMessageDTO = MessageUtils.receiveMessage(in, gson, RoleMessageDTO.class);
+                            if (roleMessageDTO != null) {
+                                role = roleMessageDTO.getRole();
+                                userId = roleMessageDTO.getUserId();
                                 loggedIn = true;
                             } else {
                                 System.out.println("Failed to retrieve role information.");

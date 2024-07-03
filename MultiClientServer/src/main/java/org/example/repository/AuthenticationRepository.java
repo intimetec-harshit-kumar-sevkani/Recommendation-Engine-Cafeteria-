@@ -17,7 +17,7 @@ public class AuthenticationRepository {
         this.connection = SQLDataSourceConfig.getConnection();
     }
 
-    public User findUserByEmailAndName(String email, String name) {
+    public User findUserByEmailAndName(String email, String name) throws SQLException{
         User user = null;
         String query = "SELECT * FROM Users WHERE Email = ? AND Name = ? AND IsDelete = FALSE";
 
@@ -35,14 +35,12 @@ public class AuthenticationRepository {
                 user.setEmail(resultSet.getString("Email"));
                 user.setDelete(resultSet.getBoolean("IsDelete"));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         return user;
     }
 
-    public Role findRoleById(int roleId) {
+    public Role findRoleById(int roleId) throws SQLException{
         Role role = null;
         String query = "SELECT * FROM Roles WHERE Id = ? AND IsDelete = FALSE";
 
@@ -57,10 +55,7 @@ public class AuthenticationRepository {
                 role.setType(resultSet.getString("Type"));
                 role.setDelete(resultSet.getBoolean("IsDelete"));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-
         return role;
     }
 }

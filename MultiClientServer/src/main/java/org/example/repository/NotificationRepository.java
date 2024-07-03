@@ -33,7 +33,8 @@ public class NotificationRepository {
                         int mealTypeId = rs.getInt("MealTypeId");
                         String mealType = getMealType(mealTypeId);
                         String message = mealType + ": " + foodItemName;
-                        insertNotification(notificationTypeId, message);
+                        //insertNotification(notificationTypeId, message);
+                        addNotification(notificationTypeId, message);
                     }
                 }
             }
@@ -65,17 +66,6 @@ public class NotificationRepository {
         }
         return null;
     }
-
-    private void insertNotification(int notificationTypeId, String message) throws SQLException {
-        String sql = "INSERT INTO notifications (NotificationTypeId, Message, IsDelete, Date) VALUES (?, ?, ?, NOW())";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, notificationTypeId);
-            stmt.setString(2, message);
-            stmt.setBoolean(3, false);
-            stmt.executeUpdate();
-        }
-    }
-
 
     public List<Notification> getValidNotifications() throws SQLException {
         List<Notification> notifications = new ArrayList<>();

@@ -13,7 +13,6 @@ import static org.example.util.JsonUtil.gson;
 
 public class FoodItemController {
     private FoodItemService foodItemService;
-
     private NotificationService notificationService;
 
     public FoodItemController() throws SQLException {
@@ -56,8 +55,15 @@ public class FoodItemController {
             return "Error: " + e.getMessage();
         }
     }
-    public List<Notification> getNotification() throws SQLException {
-        return notificationService.getNotification();
+    public String getNotification()  {
+        try {
+            List<Notification> notifications = notificationService.getNotification();
+            String notificationJson = gson.toJson(notifications);
+            return notificationJson;
+        }
+        catch (SQLException e) {
+            return "Error: " + e.getMessage();
+        }
     }
 
 }

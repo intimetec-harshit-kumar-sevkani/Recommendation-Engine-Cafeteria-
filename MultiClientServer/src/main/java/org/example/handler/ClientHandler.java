@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import org.example.controller.AuthenticationController;
 import org.example.model.LoginMessage;
 import org.example.model.MessageType;
-import org.example.model.RoleMessage;
+import org.example.model.RoleMessageDTO;
 import org.example.server.MultiClientServer;
 
 import java.io.BufferedReader;
@@ -42,7 +42,7 @@ public class ClientHandler implements Runnable {
                 System.out.println("Received message: " + message);
                 MessageType messageType = gson.fromJson(message, MessageType.class);
 
-                if (/*role == null && */messageType.type.equals("LOGIN")) {
+                if (messageType.type.equals("LOGIN")) {
                     role = handleLogin(in, out);
                 }
 
@@ -83,14 +83,14 @@ public class ClientHandler implements Runnable {
             LoginMessage loginMessage = gson.fromJson(loginMessageJson, LoginMessage.class);
             System.out.println("Received login info: " + loginMessage.getEmail());
 
-            RoleMessage roleMessage = authController.login(loginMessage.getEmail(), loginMessage.getName());
+            RoleMessageDTO roleMessageDTO = authController.login(loginMessage.getEmail(), loginMessage.getName());
 
-            String roleJson = gson.toJson(roleMessage);
+            String roleJson = gson.toJson(roleMessageDTO);
             out.println(roleJson);
 
-            return roleMessage.getRole();
+            return roleMessageDTO.getRole();
         } catch (Exception ex) {
-            return null;
+            return "Error: " + ex.getMessage();
         }
     }
 
@@ -112,7 +112,7 @@ public class ClientHandler implements Runnable {
                 adminHandler.handleNotifications(in,out);
                 break;
             default:
-                System.out.println("Unknown message type for Admin: " + messageType.type);
+                System.out.println("--------------");
         }
     }
 
@@ -131,7 +131,7 @@ public class ClientHandler implements Runnable {
                 chefHandler.handleNotifications(in,out);
                 break;
             default:
-                System.out.println("Unknown message type for Chef: " + messageType.type);
+                System.out.println("--------------");
         }
     }
 
@@ -153,7 +153,7 @@ public class ClientHandler implements Runnable {
                 employeeHandler.handleTodayMenuItems(in,out);
                 break;
             default:
-                System.out.println("Unknown message type for Employee: " + messageType.type);
+                System.out.println("--------------");
         }
     }
     public String getClientInfo() {

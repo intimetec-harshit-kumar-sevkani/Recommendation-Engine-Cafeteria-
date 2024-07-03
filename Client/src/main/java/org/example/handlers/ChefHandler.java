@@ -53,8 +53,9 @@ public class ChefHandler {
             List<FoodItem> recommendedItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
             recommendedItems.forEach(System.out::println);
         } else {
-            System.out.println("Invalid Meal Type. Valid Meal Types are: Breakfast, Lunch, and Dinner.");
-        }
+            out.println("Invalid Meal Type");
+            System.out.println(MessageUtils.receiveMessage(in));
+           }
 
     }
 
@@ -81,8 +82,9 @@ public class ChefHandler {
             MessageUtils.sendMessage(out, gson, foodItemIds);
             System.out.println(MessageUtils.receiveMessage(in));
         } else {
-            System.out.println("Invalid Meal Type. Valid Meal Types are: Breakfast, Lunch, and Dinner.");
-        }
+            out.println("Invalid Meal Type");
+            System.out.println(MessageUtils.receiveMessage(in));
+          }
 
     }
 

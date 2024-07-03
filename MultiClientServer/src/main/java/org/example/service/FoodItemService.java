@@ -21,7 +21,7 @@ public class FoodItemService {
     public void addFoodItem(FoodItem foodItem) throws SQLException {
         int foodItemId = foodItemRepository.addFoodItem(foodItem);
         notificationService.sendNotification("FoodItem Update", "Food Item Added", foodItemId);
-        foodItemAuditRepository.insertIntoFoodAudit(foodItemId);
+        foodItemAuditRepository.addFoodAudit(foodItemId);
     }
 
     public void updateFoodItem(FoodItem foodItem) throws SQLException {

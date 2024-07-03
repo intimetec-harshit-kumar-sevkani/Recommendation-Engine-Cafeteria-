@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.example.controller.FoodItemController;
 import org.example.model.FoodItem;
-import org.example.model.Notification;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,8 +24,8 @@ public class AdminHandlerImpl implements AdminHandler{
     private Gson gson = new Gson();
     public void handleAddFoodItem(BufferedReader in, PrintWriter out) throws IOException {
         String foodItemJson = in.readLine();
-        FoodItem newFoodItem = gson.fromJson(foodItemJson, FoodItem.class);
-        String response = foodItemController.addFoodItem(newFoodItem);
+        FoodItem foodItem = gson.fromJson(foodItemJson, FoodItem.class);
+        String response = foodItemController.addFoodItem(foodItem);
         out.println(response);
     }
 
@@ -56,8 +55,8 @@ public class AdminHandlerImpl implements AdminHandler{
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
         if (validFoodItemIds.contains(id)) {
-            foodItemController.deleteFoodItem(id);
-            out.println("Food item deleted successfully.");
+            String response = foodItemController.deleteFoodItem(id);
+            out.println(response);
         } else {
             out.println("Invalid Food Item Id.");
         }
@@ -69,9 +68,8 @@ public class AdminHandlerImpl implements AdminHandler{
         out.println(foodItemsJson);
     }
 
-    public void handleNotifications(BufferedReader in, PrintWriter out) throws IOException, SQLException {
-        List<Notification> notifications = foodItemController.getNotification();
-        String notificationJson = gson.toJson(notifications);
+    public void handleNotifications(BufferedReader in, PrintWriter out) throws IOException {
+        String notificationJson = foodItemController.getNotification();
         out.println(notificationJson);
     }
 }
