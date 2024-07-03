@@ -49,4 +49,10 @@ public class EmployeeController {
     public List<Notification> getNotification() throws SQLException {
         return notificationService.getNotification();
     }
+
+    public List<FoodItem> viewTodayMenu() throws SQLException {
+        List<FoodItem> foodItems = votedItemService.getPreparedFoodItemsFromYesterday();
+        return foodItems;
+    }
+
 }

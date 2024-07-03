@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class EmployeeHandlerImpl implements EmployeeHandler{
 
@@ -39,10 +41,29 @@ public class EmployeeHandlerImpl implements EmployeeHandler{
     }
 
     public void handleFeedback(BufferedReader in, PrintWriter out) throws IOException {
+      /*  String feedbackJson = in.readLine();
+        Feedback feedback = gson.fromJson(feedbackJson, Feedback.class);
+        String foodItemsJson = foodItemController.getAllFoodItems();
+        List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>(){}.getType());
+        employeeController.addFeedback(feedback);
+        out.println("Feedback added Successfully");*/
         String feedbackJson = in.readLine();
         Feedback feedback = gson.fromJson(feedbackJson, Feedback.class);
-        employeeController.addFeedback(feedback);
-        out.println("Feedback added Successfully");
+
+        // Get all food items
+        String foodItemsJson = foodItemController.getAllFoodItems();
+        List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
+
+        // Collect valid food item IDs
+        Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
+
+        // Validate feedback.foodItemId
+        if (validFoodItemIds.contains(feedback.getFoodItemId())) {
+            employeeController.addFeedback(feedback);
+            out.println("Feedback added Successfully");
+        } else {
+            out.println("Invalid Food Item Id");
+        }
     }
 
     public void handleNotifications(BufferedReader in, PrintWriter out) throws IOException, SQLException {
@@ -60,6 +81,14 @@ public class EmployeeHandlerImpl implements EmployeeHandler{
         List<Integer> votedItems = gson.fromJson(votedItemIdsJson, new TypeToken<List<Integer>>(){}.getType());
         employeeController.voteFoodItem(votedItems);
         out.println("Food Item Voted Successfully");
+
+    }
+
+
+    public void handleTodayMenuItems(BufferedReader in, PrintWriter out) throws IOException, SQLException {
+        List<FoodItem> foodItems = employeeController.viewTodayMenu();
+        String foodItemsJson = gson.toJson(foodItems);
+        out.println(foodItemsJson);
 
     }
 

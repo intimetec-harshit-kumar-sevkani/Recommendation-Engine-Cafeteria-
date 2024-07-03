@@ -7,9 +7,7 @@ import org.example.models.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 /*
 public class ChefHandler {
 
@@ -126,19 +124,33 @@ public class ChefHandler {
         MessageUtils.sendMessage(out, gson, new MessageType("GET_RECOMMENDED_ITEMS"));
 
         RecommendedDTO recommendedDTO = new RecommendedDTO();
-        System.out.println("Enter the Meal Type:");
+      /*  System.out.println("Enter the Meal Type:");
         recommendedDTO.setMealType(scanner.nextLine());
         System.out.println("Enter Number of Items:");
         recommendedDTO.setNumberOfItems(scanner.nextInt());
-        scanner.nextLine(); // consume newline
+        scanner.nextLine(); // consume newline*/
 
-        MessageUtils.sendMessage(out, gson, recommendedDTO);
-        List<FoodItem> recommendedItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
-        recommendedItems.forEach(System.out::println);
+        Set<String> validMealTypes = new HashSet<>(Arrays.asList("Breakfast", "Lunch", "Dinner"));
+
+        System.out.println("Enter the Meal Type:");
+        String mealType = scanner.nextLine();
+        if (validMealTypes.contains(mealType)) {
+            recommendedDTO.setMealType(mealType);
+
+            System.out.println("Enter Number of Items:");
+            recommendedDTO.setNumberOfItems(scanner.nextInt());
+            scanner.nextLine(); // consume newline
+            MessageUtils.sendMessage(out, gson, recommendedDTO);
+            List<FoodItem> recommendedItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
+            recommendedItems.forEach(System.out::println);
+        } else {
+            System.out.println("Invalid Meal Type. Valid Meal Types are: Breakfast, Lunch, and Dinner.");
+        }
+
     }
 
     private static void handleRollOutFoodItems(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("GET_VOTED_ITEMS"));
+      /*  MessageUtils.sendMessage(out, gson, new MessageType("GET_VOTED_ITEMS"));
 
         System.out.println("Enter the Meal Type:");
         String mealType = scanner.nextLine();
@@ -155,7 +167,31 @@ public class ChefHandler {
         }
 
         MessageUtils.sendMessage(out, gson, foodItemIds);
-        System.out.println(MessageUtils.receiveMessage(in));
+        System.out.println(MessageUtils.receiveMessage(in));*/
+        Set<String> validMealTypes = new HashSet<>(Arrays.asList("Breakfast", "Lunch", "Dinner"));
+
+        System.out.println("Enter the Meal Type:");
+        String mealType = scanner.nextLine();
+        if (validMealTypes.contains(mealType)) {
+            out.println(mealType);
+
+            List<RollOutFoodItemsDTO> foodItemList = MessageUtils.receiveMessage(in, gson, new TypeToken<List<RollOutFoodItemsDTO>>() {}.getType());
+            foodItemList.forEach(System.out::println);
+
+            List<Integer> foodItemIds = new ArrayList<>();
+            System.out.println("Enter the IDs of the food items to roll out:");
+            String[] inputIds = scanner.nextLine().split(",");
+            for (String inputId : inputIds) {
+                foodItemIds.add(Integer.parseInt(inputId.trim()));
+            }
+
+            MessageUtils.sendMessage(out, gson, foodItemIds);
+            System.out.println(MessageUtils.receiveMessage(in));
+        } else {
+            System.out.println("Invalid Meal Type. Valid Meal Types are: Breakfast, Lunch, and Dinner.");
+        }
+
+
     }
 
     private static void handleViewAllFoodItems(PrintWriter out, BufferedReader in, Gson gson) throws IOException {

@@ -268,7 +268,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private void handleAdminRequests(MessageType messageType, BufferedReader in, PrintWriter out) throws IOException {
+    private void handleAdminRequests(MessageType messageType, BufferedReader in, PrintWriter out) throws IOException, SQLException {
         switch (messageType.type) {
             case "ADD_FOOD_ITEM":
                 adminHandler.handleAddFoodItem(in, out);
@@ -281,6 +281,9 @@ public class ClientHandler implements Runnable {
                 break;
             case "VIEW_ALL_FOOD_ITEMS":
                 adminHandler.handleViewAllFoodItems(out);
+                break;
+            case "VIEW_NOTIFICATION" :
+                adminHandler.handleNotifications(in,out);
                 break;
             default:
                 System.out.println("Unknown message type for Admin: " + messageType.type);
@@ -297,6 +300,9 @@ public class ClientHandler implements Runnable {
                 break;
             case "VIEW_ALL_FOOD_ITEMS":
                 chefHandler.handleViewAllFoodItems(out);
+                break;
+            case "VIEW_NOTIFICATION":
+                chefHandler.handleNotifications(in,out);
                 break;
             default:
                 System.out.println("Unknown message type for Chef: " + messageType.type);
@@ -316,6 +322,9 @@ public class ClientHandler implements Runnable {
                 break;
             case "VIEW_NOTIFICATION":
                 employeeHandler.handleNotifications(in,out);
+                break;
+            case "VIEW_TODAY_MENU":
+                employeeHandler.handleTodayMenuItems(in,out);
                 break;
             default:
                 System.out.println("Unknown message type for Employee: " + messageType.type);

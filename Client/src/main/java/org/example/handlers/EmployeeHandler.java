@@ -7,9 +7,7 @@ import org.example.models.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 /*
 
 public class EmployeeHandler {
@@ -96,6 +94,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class EmployeeHandler {
 
@@ -160,16 +159,42 @@ public class EmployeeHandler {
         String voteItemJson = in.readLine();
         List<FoodItem> votedItemList = gson.fromJson(voteItemJson, new TypeToken<List<FoodItem>>(){}.getType());
         votedItemList.forEach(System.out::println);
+
+        Set<Integer> validIds = votedItemList.stream().map(FoodItem::getId).collect(Collectors.toSet());
+
+
         List<Integer> votedItemIds = new ArrayList<>();
         System.out.println("Enter the IDs of the food items to vote for");
         String[] inputIds = scanner.nextLine().split(",");
+
+        for (String inputId : inputIds) {
+            int id = Integer.parseInt(inputId.trim());
+            if (validIds.contains(id)) {
+                votedItemIds.add(id);
+            } else {
+                System.out.println("Invalid item ID: " + id);
+            }
+        }
+
+        if (votedItemIds.isEmpty()) {
+            System.out.println("No valid IDs entered. Exiting.");
+        } else {
+            String votedItemIdsJson = gson.toJson(votedItemIds);
+            out.println(votedItemIdsJson);
+            String response = in.readLine();
+            System.out.println(response);
+        }
+
+
+
+        /*
         for (String inputId : inputIds) {
             votedItemIds.add(Integer.parseInt(inputId.trim()));
         }
         String votedItemIdsJson = gson.toJson(votedItemIds);
         out.println(votedItemIdsJson);
         String response = in.readLine();
-        System.out.println(response);
+        System.out.println(response);*/
 
     }
 

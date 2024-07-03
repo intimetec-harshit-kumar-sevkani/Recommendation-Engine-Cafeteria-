@@ -6,6 +6,7 @@ import org.example.model.RollOutFoodItemsDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -175,6 +176,64 @@ public class VotedItemRepository {
                 return foodItems;
             }
         }
+    }
+
+
+    public List<Integer> getPreparedFoodItemIdsFromYesterday() {
+        List<Integer> foodItemIds = new ArrayList<>();
+        try (
+                PreparedStatement stmt = connection.prepareStatement(
+                        "SELECT FoodItemId FROM voteditems " +
+                                "WHERE IsPrepared = 1 " +
+                                "AND DATE(Date) = ?")) {
+
+            // Calculate yesterday's date
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+            java.util.Date yesterday = calendar.getTime();
+
+            // Convert yesterday's date to SQL date
+            java.sql.Date sqlYesterday = new java.sql.Date(yesterday.getTime());
+
+            stmt.setDate(1, sqlYesterday);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                foodItemIds.add(rs.getInt("FoodItemId"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return foodItemIds;
+    }
+
+
+    public List<FoodItem> getFoodItemsByIds(List<Integer> foodItemIds) {
+        List<FoodItem> foodItems = new ArrayList<>();
+        if (foodItemIds.isEmpty()) {
+            return foodItems;
+        }
+
+        String idList = foodItemIds.toString().replace("[", "").replace("]", "");
+        try (
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(
+                     "SELECT * FROM fooditems WHERE Id IN (" + idList + ") AND IsDelete = 0")) {
+
+            while (rs.next()) {
+                FoodItem foodItem = new FoodItem();
+                foodItem.setId(rs.getInt("Id"));
+                foodItem.setMealTypeId(rs.getInt("MealTypeId"));
+                foodItem.setName(rs.getString("Name"));
+                foodItem.setPrice(rs.getBigDecimal("Price"));
+                foodItem.setAvailable(rs.getBoolean("IsAvailable"));
+                foodItem.setDelete(rs.getBoolean("IsDelete"));
+                foodItems.add(foodItem);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return foodItems;
     }
 
 

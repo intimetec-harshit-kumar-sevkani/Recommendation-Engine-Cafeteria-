@@ -43,4 +43,9 @@ public class VotedItemService {
         return foodItems;
     }
 
+    public List<FoodItem> getPreparedFoodItemsFromYesterday() {
+        List<Integer> foodItemIds = votedItemRepository.getPreparedFoodItemIdsFromYesterday();
+        return votedItemRepository.getFoodItemsByIds(foodItemIds);
+    }
+
 }
