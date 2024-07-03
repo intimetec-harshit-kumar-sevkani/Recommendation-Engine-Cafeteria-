@@ -2,7 +2,6 @@ package org.example.controller;
 
 import org.example.model.RoleMessage;
 import org.example.service.AuthenticationService;
-
 import java.sql.SQLException;
 
 public class AuthenticationController {

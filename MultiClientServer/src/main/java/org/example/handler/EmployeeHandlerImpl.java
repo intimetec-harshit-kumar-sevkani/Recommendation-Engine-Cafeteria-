@@ -18,13 +18,6 @@ import java.util.stream.Collectors;
 
 public class EmployeeHandlerImpl implements EmployeeHandler{
 
-    /*
-    ("VIEW_ALL_FOOD_ITEMS") handleViewAllFoodItems
-("GIVE_FEEDBACK")  handleFeedback
-("VOTE_RECOMMENDED_ITEMS") handleVotedFoodItems
-("VIEW_NOTIFICATION") handleNotifications
-     */
-
     private FoodItemController foodItemController;
 
     private EmployeeController employeeController;
@@ -41,23 +34,14 @@ public class EmployeeHandlerImpl implements EmployeeHandler{
     }
 
     public void handleFeedback(BufferedReader in, PrintWriter out) throws IOException {
-      /*  String feedbackJson = in.readLine();
-        Feedback feedback = gson.fromJson(feedbackJson, Feedback.class);
-        String foodItemsJson = foodItemController.getAllFoodItems();
-        List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>(){}.getType());
-        employeeController.addFeedback(feedback);
-        out.println("Feedback added Successfully");*/
         String feedbackJson = in.readLine();
         Feedback feedback = gson.fromJson(feedbackJson, Feedback.class);
 
-        // Get all food items
         String foodItemsJson = foodItemController.getAllFoodItems();
         List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
 
-        // Collect valid food item IDs
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
-        // Validate feedback.foodItemId
         if (validFoodItemIds.contains(feedback.getFoodItemId())) {
             employeeController.addFeedback(feedback);
             out.println("Feedback added Successfully");

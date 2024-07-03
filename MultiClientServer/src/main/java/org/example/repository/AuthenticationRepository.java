@@ -4,7 +4,10 @@ import org.example.Config.SQLDataSourceConfig;
 import org.example.model.Role;
 import org.example.model.User;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class AuthenticationRepository {
 
@@ -61,42 +64,3 @@ public class AuthenticationRepository {
         return role;
     }
 }
-
-
-/*
-
-public class AuthenticationRepository extends GenericRepository<User> {
-
-    public AuthenticationRepository() throws SQLException {
-        super();
-    }
-
-    public User findUserByEmailAndName(String email, String name) throws SQLException {
-        String query = "SELECT * FROM Users WHERE Email = ? AND Name = ? AND IsDelete = FALSE";
-        return findById(query, this::mapUser, email, name);
-    }
-
-    public Role findRoleById(int roleId) throws SQLException {
-        String query = "SELECT * FROM Roles WHERE Id = ? AND IsDelete = FALSE";
-        return findById(query, this::mapRole, roleId); // Ensure single parameter is passed as an Object
-    }
-
-    private User mapUser(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getInt("Id"));
-        user.setRoleId(rs.getInt("RoleId"));
-        user.setName(rs.getString("Name"));
-        user.setEmail(rs.getString("Email"));
-        user.setDelete(rs.getBoolean("IsDelete"));
-        return user;
-    }
-
-    private Role mapRole(ResultSet rs) throws SQLException {
-        Role role = new Role();
-        role.setId(rs.getInt("Id"));
-        role.setType(rs.getString("Type"));
-        role.setDelete(rs.getBoolean("IsDelete"));
-        return role;
-    }
-}
-*/

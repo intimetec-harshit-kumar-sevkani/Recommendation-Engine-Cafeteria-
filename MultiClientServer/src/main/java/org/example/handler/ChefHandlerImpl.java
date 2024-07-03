@@ -18,13 +18,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ChefHandlerImpl implements ChefHandler{
-
-    /*
-    ("GET_RECOMMENDED_ITEMS")
-("GET_VOTED_ITEMS")
-("VIEW_ALL_FOOD_ITEMS")
-     */
-
     private ChefController chefController;
 
     private FoodItemController foodItemController;
@@ -53,26 +46,14 @@ public class ChefHandlerImpl implements ChefHandler{
         String rollOutFoodItemJson = gson.toJson(rollOutFoodItemsDTOList);
         out.println(rollOutFoodItemJson);
         String rollItemIdsJson = in.readLine();
-      /*  List<Integer> rollOutItems = gson.fromJson(rollItemIdsJson, new TypeToken<List<Integer>>(){}.getType());
-
-        String foodItemsJson = foodItemController.getAllFoodItems();
-        List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
-
-        // Collect valid food item IDs
-        Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
-
-        chefController.rollOutItems(rollOutItems);
-        out.println("Food Item Roll Out Successfully");*/
 
         List<Integer> rollOutItems = gson.fromJson(rollItemIdsJson, new TypeToken<List<Integer>>(){}.getType());
 
         String foodItemsJson = foodItemController.getAllFoodItems();
         List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
 
-// Collect valid food item IDs
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
-// Validate rollOutItems
         boolean isValid = rollOutItems.stream().allMatch(validFoodItemIds::contains);
 
         if (isValid) {
@@ -81,9 +62,6 @@ public class ChefHandlerImpl implements ChefHandler{
         } else {
             out.println("Invalid Food Item Id(s) in the list.");
         }
-
-
-
     }
     public void handleNotifications(BufferedReader in, PrintWriter out) throws IOException, SQLException {
         List<Notification> notifications = chefController.getNotification();

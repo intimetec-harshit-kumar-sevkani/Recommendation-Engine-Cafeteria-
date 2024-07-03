@@ -9,7 +9,6 @@ import org.example.repository.VotedItemRepository;
 import org.example.util.SentimentAnalyzer;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,16 +26,6 @@ public class RecommendationService {
     }
 
     public List<FoodItem> getAllFoodItems(RecommendedDTO recommendedDTO) throws SQLException {
-      /*  List<FoodItem> allTopFoodItems = new ArrayList<>();
-        List<String> mealTypes = List.of("Breakfast", "Lunch", "Dinner");
-        for (String mealType : mealTypes) {
-            List<FoodItem> topFoodItems = foodItemRepository.getTopFoodItems(mealType);
-            allTopFoodItems.addAll(topFoodItems);
-        }
-
-        votedItemRepository.insertFoodItemsToVotedItems(allTopFoodItems);
-
-        return allTopFoodItems;*/
         List<FoodItem> topFoodItems = foodItemRepository.getTopFoodItems(recommendedDTO.getMealType(),recommendedDTO.getNumberOfItems());
         votedItemRepository.insertFoodItemsToVotedItems(topFoodItems);
         return topFoodItems;

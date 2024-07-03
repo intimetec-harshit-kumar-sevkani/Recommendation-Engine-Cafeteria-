@@ -1,6 +1,5 @@
 package org.example.model;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class Feedback {
@@ -24,7 +23,6 @@ public class Feedback {
         this.isDelete = isDelete;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }

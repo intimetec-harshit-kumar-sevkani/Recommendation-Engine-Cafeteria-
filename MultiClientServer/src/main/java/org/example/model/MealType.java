@@ -13,7 +13,6 @@ public class MealType {
         this.isDelete = isDelete;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }

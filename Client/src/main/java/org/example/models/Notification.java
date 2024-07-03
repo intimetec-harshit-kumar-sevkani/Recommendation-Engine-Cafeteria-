@@ -20,7 +20,6 @@ public class Notification {
         this.date = date;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }

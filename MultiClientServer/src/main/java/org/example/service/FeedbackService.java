@@ -1,9 +1,7 @@
 package org.example.service;
 
 import org.example.model.Feedback;
-import org.example.model.FoodItem;
 import org.example.repository.FeedbackRepository;
-import org.example.repository.FoodItemRepository;
 
 import java.sql.SQLException;
 

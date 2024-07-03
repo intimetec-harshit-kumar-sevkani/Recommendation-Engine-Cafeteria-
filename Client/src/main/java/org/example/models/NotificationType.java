@@ -15,7 +15,6 @@ public class NotificationType {
         this.isDelete = isDelete;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }

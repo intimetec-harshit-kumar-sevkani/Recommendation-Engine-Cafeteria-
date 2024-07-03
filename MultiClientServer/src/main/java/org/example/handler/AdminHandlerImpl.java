@@ -30,29 +30,6 @@ public class AdminHandlerImpl implements AdminHandler{
         out.println("Food item added successfully.");
     }
 
-   /* public void handleUpdateFoodItem(BufferedReader in, PrintWriter out) throws IOException {
-        String payload = in.readLine();
-        FoodItem updatedFoodItem = gson.fromJson(payload, FoodItem.class);
-
-        String foodItemsJson = foodItemController.getAllFoodItems();
-        List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
-
-
-        foodItemController.updateFoodItem(updatedFoodItem);
-        out.println("Food item updated successfully.");
-    }
-
-    public void handleDeleteFoodItem(BufferedReader in, PrintWriter out) throws IOException {
-        int id = Integer.parseInt(in.readLine());
-
-        String foodItemsJson = foodItemController.getAllFoodItems();
-        List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
-
-
-        foodItemController.deleteFoodItem(id);
-        out.println("Food item deleted successfully.");
-    }*/
-
     public void handleUpdateFoodItem(BufferedReader in, PrintWriter out) throws IOException {
         String payload = in.readLine();
         FoodItem updatedFoodItem = gson.fromJson(payload, FoodItem.class);
@@ -60,10 +37,8 @@ public class AdminHandlerImpl implements AdminHandler{
         String foodItemsJson = foodItemController.getAllFoodItems();
         List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
 
-        // Collect valid food item IDs
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
-        // Validate the ID of the updated food item
         if (validFoodItemIds.contains(updatedFoodItem.getId())) {
             foodItemController.updateFoodItem(updatedFoodItem);
             out.println("Food item updated successfully.");
@@ -78,10 +53,8 @@ public class AdminHandlerImpl implements AdminHandler{
         String foodItemsJson = foodItemController.getAllFoodItems();
         List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
 
-        // Collect valid food item IDs
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
-        // Validate the ID for deletion
         if (validFoodItemIds.contains(id)) {
             foodItemController.deleteFoodItem(id);
             out.println("Food item deleted successfully.");

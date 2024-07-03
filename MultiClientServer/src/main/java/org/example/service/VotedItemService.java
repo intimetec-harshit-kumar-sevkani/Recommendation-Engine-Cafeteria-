@@ -5,7 +5,6 @@ import org.example.model.RollOutFoodItemsDTO;
 import org.example.repository.VotedItemRepository;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class VotedItemService {
@@ -18,13 +17,6 @@ public class VotedItemService {
 
     public void updateFoodItem(List<Integer> votedItemIds) throws SQLException {
         votedItemRepository.voteFoodItems(votedItemIds);
-      /*  List<FoodItem> topVotedFoodItems = votedItemRepository.getTopVotedFoodItems();
-        List<Integer> topVotedFoodItemIds = new ArrayList<>();
-        for (FoodItem foodItem : topVotedFoodItems) {
-            topVotedFoodItemIds.add(foodItem.getId());
-        }*/
-       // votedItemRepository.markFoodItemsAsPrepared(topVotedFoodItemIds);
-
     }
 
     public void rollOutFoodItems(List<Integer> votedItemIds)  throws SQLException {

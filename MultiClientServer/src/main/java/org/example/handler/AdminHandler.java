@@ -10,8 +10,5 @@ public interface AdminHandler {
     void handleUpdateFoodItem(BufferedReader in, PrintWriter out) throws IOException;
     void handleDeleteFoodItem(BufferedReader in, PrintWriter out) throws IOException;
     void handleViewAllFoodItems(PrintWriter out) throws IOException;
-
     void handleNotifications(BufferedReader in, PrintWriter out) throws IOException, SQLException;
-
-
 }

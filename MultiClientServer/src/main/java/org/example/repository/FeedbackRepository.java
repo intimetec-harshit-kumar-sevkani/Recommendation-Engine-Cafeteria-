@@ -2,10 +2,12 @@ package org.example.repository;
 
 import org.example.Config.SQLDataSourceConfig;
 import org.example.model.Feedback;
-import org.example.model.FoodItem;
 import org.example.model.FoodItemRating;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,38 +69,3 @@ public class FeedbackRepository {
     }
 
 }
-
-/*
-
-public class FeedbackRepository extends GenericRepository<FoodItemRating> {
-
-    public FeedbackRepository() throws SQLException {
-        super();
-    }
-
-    public List<FoodItemRating> getFoodItemRatingsForToday() throws SQLException {
-        String query = "SELECT FoodItemId, AVG(Rating) AS average_rating, GROUP_CONCAT(Comment SEPARATOR ', ') AS comments " +
-                "FROM Feedbacks WHERE Date = CURDATE() GROUP BY FoodItemId";
-        return findAll(query, this::mapFoodItemRating);
-    }
-
-    public void updateItemAudit(FoodItemRating foodItemRating, double averageSentiment) throws SQLException {
-        String query = "UPDATE FoodItemAudit SET Rating = ?, Sentiment = ? WHERE FoodItemId = ?";
-        update(query, foodItemRating.getAverageRating(), averageSentiment, foodItemRating.getFoodItemId());
-    }
-
-    public void addFeedback(Feedback feedback) throws SQLException {
-        String query = "INSERT INTO Feedbacks (FoodItemId, UserId, Rating, Comment , Date ,IsDelete) VALUES (?, ?, ?, ?, CURDATE(), ?)";
-        insert(query, feedback.getFoodItemId(), feedback.getUserId(), feedback.getRating(), feedback.getComment(), feedback.isDelete());
-    }
-
-    private FoodItemRating mapFoodItemRating(ResultSet rs) throws SQLException {
-        FoodItemRating foodItemRating = new FoodItemRating();
-        foodItemRating.setFoodItemId(rs.getInt("FoodItemId"));
-        foodItemRating.setAverageRating(rs.getDouble("average_rating"));
-        foodItemRating.setComments(rs.getString("comments"));
-        return foodItemRating;
-    }
-}
-
-*/

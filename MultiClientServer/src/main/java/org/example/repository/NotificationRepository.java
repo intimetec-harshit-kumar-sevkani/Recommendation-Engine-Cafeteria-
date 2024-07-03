@@ -3,7 +3,10 @@ package org.example.repository;
 import org.example.Config.SQLDataSourceConfig;
 import org.example.model.Notification;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 public class NotificationRepository {
@@ -91,7 +94,6 @@ public class NotificationRepository {
                 java.sql.Timestamp date = rs.getTimestamp("Date");
                 int validFor = rs.getInt("ValidFor");
 
-                // Calculate the validUntil date
                 java.sql.Timestamp validUntil = new java.sql.Timestamp(date.getTime() + (validFor * 24L * 60L * 60L * 1000L));
                 java.sql.Timestamp currentDate = new java.sql.Timestamp(System.currentTimeMillis());
 
