@@ -35,7 +35,7 @@ public class FoodItemRepository {
    }
 
     public void updateFoodItem(FoodItem foodItem) throws SQLException {
-        String sql = "UPDATE FoodItems SET MealTypeId = ?, Name = ?, Price = ?, IsAvailable = ?, IsDelete = ? WHERE Id = ?";
+        String sql = "UPDATE fooditems SET MealTypeId = ?, Name = ?, Price = ?, IsAvailable = ?, IsDelete = ? WHERE Id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, foodItem.getMealTypeId());
             stmt.setString(2, foodItem.getName());
@@ -48,7 +48,7 @@ public class FoodItemRepository {
     }
 
     public void deleteFoodItem(int id) throws SQLException {
-        String sql = "DELETE FROM FoodItems WHERE Id = ?";
+        String sql = "DELETE FROM fooditems WHERE Id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

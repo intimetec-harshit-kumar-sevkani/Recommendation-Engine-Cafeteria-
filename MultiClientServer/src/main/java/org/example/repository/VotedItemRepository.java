@@ -167,7 +167,7 @@ public class VotedItemRepository {
     }
 
 
-    public List<Integer> getPreparedFoodItemIdsFromYesterday() {
+    public List<Integer> getPreparedFoodItemIdsFromYesterday() throws SQLException  {
         List<Integer> foodItemIds = new ArrayList<>();
         try (
                 PreparedStatement stmt = connection.prepareStatement(
@@ -186,14 +186,14 @@ public class VotedItemRepository {
             while (rs.next()) {
                 foodItemIds.add(rs.getInt("FoodItemId"));
             }
-        } catch (SQLException e) {
+        } /*catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
         return foodItemIds;
     }
 
 
-    public List<FoodItem> getFoodItemsByIds(List<Integer> foodItemIds) {
+    public List<FoodItem> getFoodItemsByIds(List<Integer> foodItemIds) throws SQLException {
         List<FoodItem> foodItems = new ArrayList<>();
         if (foodItemIds.isEmpty()) {
             return foodItems;
@@ -215,9 +215,9 @@ public class VotedItemRepository {
                 foodItem.setDelete(rs.getBoolean("IsDelete"));
                 foodItems.add(foodItem);
             }
-        } catch (SQLException e) {
+        } /*catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
         return foodItems;
     }
 

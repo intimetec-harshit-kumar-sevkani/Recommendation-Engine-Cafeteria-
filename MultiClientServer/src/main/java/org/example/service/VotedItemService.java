@@ -35,7 +35,7 @@ public class VotedItemService {
         return foodItems;
     }
 
-    public List<FoodItem> getPreparedFoodItemsFromYesterday() {
+    public List<FoodItem> getPreparedFoodItemsFromYesterday() throws SQLException {
         List<Integer> foodItemIds = votedItemRepository.getPreparedFoodItemIdsFromYesterday();
         return votedItemRepository.getFoodItemsByIds(foodItemIds);
     }

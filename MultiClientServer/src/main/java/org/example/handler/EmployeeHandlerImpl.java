@@ -73,7 +73,6 @@ public class EmployeeHandlerImpl implements EmployeeHandler{
         List<FoodItem> foodItems = employeeController.viewTodayMenu();
         String foodItemsJson = gson.toJson(foodItems);
         out.println(foodItemsJson);
-
     }
 
 }

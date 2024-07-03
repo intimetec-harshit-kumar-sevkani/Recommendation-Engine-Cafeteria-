@@ -25,6 +25,7 @@ public class ChefHandler {
                 return false;
             case "4" :
                 handleViewNotification(out, in, gson);
+                return false;
             case "5":
                 System.out.println("Exiting...");
                 return true;
@@ -47,7 +48,7 @@ public class ChefHandler {
 
             System.out.println("Enter Number of Items:");
             recommendedDTO.setNumberOfItems(scanner.nextInt());
-            scanner.nextLine(); // consume newline
+            scanner.nextLine();
             MessageUtils.sendMessage(out, gson, recommendedDTO);
             List<FoodItem> recommendedItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
             recommendedItems.forEach(System.out::println);
@@ -58,6 +59,8 @@ public class ChefHandler {
     }
 
     private static void handleRollOutFoodItems(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+        MessageUtils.sendMessage(out, gson, new MessageType("GET_VOTED_ITEMS"));
+
         Set<String> validMealTypes = new HashSet<>(Arrays.asList("Breakfast", "Lunch", "Dinner"));
 
         System.out.println("Enter the Meal Type:");

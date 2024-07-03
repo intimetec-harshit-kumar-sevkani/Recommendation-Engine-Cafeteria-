@@ -26,8 +26,8 @@ public class AdminHandlerImpl implements AdminHandler{
     public void handleAddFoodItem(BufferedReader in, PrintWriter out) throws IOException {
         String foodItemJson = in.readLine();
         FoodItem newFoodItem = gson.fromJson(foodItemJson, FoodItem.class);
-        foodItemController.addFoodItem(newFoodItem);
-        out.println("Food item added successfully.");
+        String response = foodItemController.addFoodItem(newFoodItem);
+        out.println(response);
     }
 
     public void handleUpdateFoodItem(BufferedReader in, PrintWriter out) throws IOException {
@@ -40,8 +40,8 @@ public class AdminHandlerImpl implements AdminHandler{
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
         if (validFoodItemIds.contains(updatedFoodItem.getId())) {
-            foodItemController.updateFoodItem(updatedFoodItem);
-            out.println("Food item updated successfully.");
+            String response = foodItemController.updateFoodItem(updatedFoodItem);
+            out.println(response);
         } else {
             out.println("Invalid Food Item Id.");
         }
