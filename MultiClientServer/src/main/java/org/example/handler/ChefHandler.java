@@ -10,4 +10,7 @@ public interface ChefHandler {
     void handleRollOutItems(BufferedReader in, PrintWriter out) throws IOException, SQLException;
     void handleViewAllFoodItems(PrintWriter out) throws IOException;
     void handleNotifications(BufferedReader in, PrintWriter out) throws IOException, SQLException;
+
+    void handleDiscardMenuItems(BufferedReader in, PrintWriter out) throws IOException, SQLException;
+
 }

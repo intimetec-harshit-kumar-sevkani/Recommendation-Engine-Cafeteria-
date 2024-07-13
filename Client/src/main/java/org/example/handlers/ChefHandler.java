@@ -26,7 +26,10 @@ public class ChefHandler {
             case "4" :
                 handleViewNotification(out, in, gson);
                 return false;
-            case "5":
+            case "5" :
+                handleDiscardMenuItems(out, in, gson);
+                return false;
+            case "6":
                 System.out.println("Exiting...");
                 return true;
             default:
@@ -102,4 +105,52 @@ public class ChefHandler {
         notifications.forEach(System.out::println);
     }
 
+    private static void handleDiscardMenuItems(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_DISCARD_ITEMS"));
+
+        List<FoodItem> foodItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
+        foodItems.forEach(System.out::println);
+
+
+        System.out.println("Choose an option:");
+        System.out.println("1. Discard a Food Item");
+        System.out.println("2. Send Notification for Feedback");
+        System.out.print("Enter your choice: ");
+        Scanner scanner = new Scanner(System.in);
+        String choice = scanner.nextLine();
+        switch (choice) {
+            case "1" :
+                // Discard a Food Item
+                out.println("Discard_Food_Items");
+                System.out.print("Enter the FoodItemIds to discard (comma-separated): ");
+                String input = in.readLine().trim();
+                List<Integer> foodItemIds = parseFoodItemIds(input);
+                MessageUtils.sendMessage(out, gson, foodItemIds);
+                System.out.println(MessageUtils.receiveMessage(in));
+                break;
+            case "2":
+                // Send Notification for Feedback
+                out.println("Send_Notification");
+                MessageUtils.sendMessage(out, gson, foodItems);
+                //sendNotificationForFeedback(foodItems);
+                System.out.println(MessageUtils.receiveMessage(in));
+                break;
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    }
+
+    private static List<Integer> parseFoodItemIds(String input) {
+        List<Integer> foodItemIds = new ArrayList<>();
+        String[] ids = input.split(",");
+        for (String id : ids) {
+            try {
+                foodItemIds.add(Integer.parseInt(id.trim()));
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid ID: " + id);
+            }
+        }
+        return foodItemIds;
+    }
 }

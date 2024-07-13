@@ -4,6 +4,7 @@ import org.example.Config.SQLDataSourceConfig;
 import org.example.model.FoodItem;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,5 +104,119 @@ public class FoodItemRepository {
         }
     }
 
+    // getDiscardedFoodItems
+
+   /* public List<Integer> getDiscardedFoodItems() throws SQLException {
+        List<Integer> foodItemIds = new ArrayList<>();
+        String selectSql = "SELECT FoodItemId FROM FoodItemAudit WHERE Rating <= 2";
+        String insertSql = "INSERT INTO discarditem (foodItemId, date) VALUES (?, ?)";
+
+        try (PreparedStatement selectStmt = connection.prepareStatement(selectSql);
+             PreparedStatement insertStmt = connection.prepareStatement(insertSql);
+             ResultSet rs = selectStmt.executeQuery()) {
+
+            while (rs.next()) {
+                int foodItemId = rs.getInt("FoodItemId");
+                foodItemIds.add(foodItemId);
+
+                insertStmt.setInt(1, foodItemId);
+                insertStmt.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+                insertStmt.addBatch();
+            }
+
+            insertStmt.executeBatch();
+        }
+
+        return foodItemIds;
+    }*/
+
+    public List<FoodItem> getById(List<Integer> foodItemIds) throws SQLException {
+        if (foodItemIds == null || foodItemIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<FoodItem> foodItems = new ArrayList<>();
+        String sql = "SELECT * FROM foodItems WHERE Id IN (" +
+                String.join(",", foodItemIds.stream().map(id -> "?").toArray(String[]::new)) +
+                ")";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            for (int i = 0; i < foodItemIds.size(); i++) {
+                stmt.setInt(i + 1, foodItemIds.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    FoodItem foodItem = new FoodItem();
+                    foodItem.setId(rs.getInt("Id"));
+                    foodItem.setMealTypeId(rs.getInt("MealTypeId"));
+                    foodItem.setName(rs.getString("Name"));
+                    foodItem.setPrice(rs.getBigDecimal("Price"));
+                    foodItem.setAvailable(rs.getBoolean("IsAvailable"));
+                    foodItem.setDelete(rs.getBoolean("IsDelete"));
+
+                    foodItems.add(foodItem);
+                }
+            }
+        }
+
+        return foodItems;
+
+    }
+
+
+    public List<Integer> getDiscardedFoodItems() throws SQLException {
+        List<Integer> foodItemIds = new ArrayList<>();
+
+        // Check for discarded items within the past month
+        String checkSql = "SELECT foodItemId FROM discarditem WHERE date >= ?";
+        LocalDate oneMonthAgo = LocalDate.now().minusMonths(1);
+
+        try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
+            checkStmt.setDate(1, java.sql.Date.valueOf(oneMonthAgo));
+
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                while (rs.next()) {
+                    foodItemIds.add(rs.getInt("foodItemId"));
+                }
+            }
+        }
+
+        // If no discarded items found within the past month, fetch and insert new ones
+        if (foodItemIds.isEmpty()) {
+            insertDiscardedItems(foodItemIds);
+        }
+
+        return foodItemIds;
+    }
+
+    private void insertDiscardedItems(List<Integer> foodItemIds) throws SQLException {
+        String insertSql = "INSERT INTO discarditem (foodItemId, date) VALUES (?, ?)";
+
+        try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
+            for (int foodItemId : foodItemIds) {
+                insertStmt.setInt(1, foodItemId);
+                insertStmt.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+                insertStmt.addBatch();
+            }
+
+            insertStmt.executeBatch();
+        }
+    }
+
+
+    public void discardFoodItems(List<Integer> foodItemIds) {
+        String deleteSql = "DELETE FROM foodItems WHERE Id = ?";
+        try (PreparedStatement deleteStmt = connection.prepareStatement(deleteSql)) {
+            for (int foodItemId : foodItemIds) {
+                deleteStmt.setInt(1, foodItemId);
+                deleteStmt.addBatch();
+            }
+            deleteStmt.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

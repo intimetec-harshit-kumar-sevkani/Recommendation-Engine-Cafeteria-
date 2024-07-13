@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.model.FoodItem;
 import org.example.model.Notification;
 import org.example.repository.NotificationRepository;
 
@@ -30,6 +31,23 @@ public class NotificationService {
         } else {
             System.out.println("Invalid notification type: " + notificationType);
         }
+    }
+
+    public void sendNotificationForFeedback(List<FoodItem> foodItems) throws SQLException{
+        int notificationTypeId = notificationRepository.getNotificationTypeId("FoodItem Update");
+        String message = "Provide Feedback for Discard Items: " + getFoodItemIds(foodItems);
+        notificationRepository.addNotification(notificationTypeId, message);
+    }
+
+    private static String getFoodItemIds(List<FoodItem> foodItems) {
+        StringBuilder ids = new StringBuilder();
+        for (FoodItem item : foodItems) {
+            if (ids.length() > 0) {
+                ids.append(", ");
+            }
+            ids.append(item.getId());
+        }
+        return ids.toString();
     }
 
 }

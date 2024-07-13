@@ -2,10 +2,7 @@ package org.example.handlers;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.example.models.Feedback;
-import org.example.models.FoodItem;
-import org.example.models.MessageType;
-import org.example.models.Notification;
+import org.example.models.*;
 import org.example.utils.MessageUtils;
 
 import java.io.BufferedReader;
@@ -33,7 +30,10 @@ public class EmployeeHandler {
             case "5":
                 handleTodayMenuItems(out, in, gson);
                 return false;
-            case "6":
+            case "6" :
+                handleUserProfile(scanner,out, in, gson, userId);
+                return false;
+            case "7":
                 System.out.println("Exiting...");
                 return true;
             default:
@@ -128,6 +128,28 @@ public class EmployeeHandler {
         String foodItemJson = in.readLine();
         List<FoodItem> foodItems =  gson.fromJson(foodItemJson, new TypeToken<List<FoodItem>>(){}.getType());
         foodItems.forEach(System.out::println);
+    }
+
+    private static void handleUserProfile(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , int userId ) throws IOException {
+        MessageUtils.sendMessage(out, gson, new MessageType("CREATE_USER_PROFILE"));
+
+        System.out.print("Enter Food Type: ");
+        String foodType = scanner.nextLine().trim();
+
+        System.out.print("Enter Spice Level: ");
+        String spiceLevel = scanner.nextLine().trim();
+
+        System.out.print("Enter Originality: ");
+        String originality = scanner.nextLine().trim();
+
+        System.out.print("Do you have a sweet tooth? (true/false): ");
+        boolean sweetTooth = Boolean.parseBoolean(scanner.nextLine().trim());
+
+        // Create UserProfile object
+        UserProfile userProfile = new UserProfile(userId, foodType, spiceLevel, originality, sweetTooth);
+        MessageUtils.sendMessage(out, gson, userProfile);
+
+        System.out.println(MessageUtils.receiveMessage(in));
     }
 
 }

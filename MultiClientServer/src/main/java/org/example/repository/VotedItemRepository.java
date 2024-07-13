@@ -50,6 +50,8 @@ public class VotedItemRepository {
         }
     }
 
+
+
     public void markFoodItemsAsPrepared(List<Integer> foodItemIds) throws SQLException {
         String sql = "UPDATE VotedItems SET IsPrepared = true WHERE FoodItemId = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

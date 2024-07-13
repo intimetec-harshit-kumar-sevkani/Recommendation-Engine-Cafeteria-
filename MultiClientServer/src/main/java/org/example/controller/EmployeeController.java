@@ -4,10 +4,8 @@ import com.google.gson.Gson;
 import org.example.model.Feedback;
 import org.example.model.FoodItem;
 import org.example.model.Notification;
-import org.example.service.FeedbackService;
-import org.example.service.NotificationService;
-import org.example.service.RecommendationService;
-import org.example.service.VotedItemService;
+import org.example.model.UserProfile;
+import org.example.service.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -19,6 +17,8 @@ public class EmployeeController {
 
     private RecommendationService recommendationService;
 
+    private EmployeeService employeeService;
+
     private Gson gson = new Gson();
 
     private NotificationService notificationService;
@@ -28,6 +28,7 @@ public class EmployeeController {
         this.feedbackService = new FeedbackService();
         this.notificationService = new NotificationService();
         this.recommendationService = new RecommendationService();
+        this.employeeService = new EmployeeService();
     }
 
     public String voteFoodItem(List<Integer> votedFoodItems) {
@@ -79,5 +80,16 @@ public class EmployeeController {
             return "Error: " + e.getMessage();
         }
     }
+
+    public String addUserProfile(UserProfile userProfile) {
+        try {
+             employeeService.addUserProfile(userProfile);
+            return "Profile Added SuccessFully";
+        } catch (SQLException e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+
 
 }

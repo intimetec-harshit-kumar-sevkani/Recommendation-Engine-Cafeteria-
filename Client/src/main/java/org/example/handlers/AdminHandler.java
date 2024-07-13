@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import org.example.models.FoodItem;
 import org.example.models.MessageType;
 import org.example.models.Notification;
+import org.example.utils.EntityTablePrinter;
 import org.example.utils.MessageUtils;
 
 import java.io.BufferedReader;
@@ -94,7 +95,8 @@ public class AdminHandler {
         MessageUtils.sendMessage(out, gson, new MessageType("VIEW_ALL_FOOD_ITEMS"));
 
         List<FoodItem> foodItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
-        foodItems.forEach(System.out::println);
+       // foodItems.forEach(System.out::println);
+        EntityTablePrinter.printEntitiesAsTable(foodItems);
     }
     private static void handleViewNotification(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
         MessageUtils.sendMessage(out, gson, new MessageType("VIEW_NOTIFICATION"));
@@ -102,5 +104,7 @@ public class AdminHandler {
         List<Notification> notifications = gson.fromJson(notificationJson, new TypeToken<List<Notification>>(){}.getType());
         notifications.forEach(System.out::println);
     }
+
+
 
 }

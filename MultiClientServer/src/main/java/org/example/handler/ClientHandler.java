@@ -130,6 +130,8 @@ public class ClientHandler implements Runnable {
             case "VIEW_NOTIFICATION":
                 chefHandler.handleNotifications(in,out);
                 break;
+            case "VIEW_DISCARD_ITEMS":
+                chefHandler.handleDiscardMenuItems(in,out);
             default:
                 System.out.println("--------------");
         }
@@ -151,6 +153,9 @@ public class ClientHandler implements Runnable {
                 break;
             case "VIEW_TODAY_MENU":
                 employeeHandler.handleTodayMenuItems(in,out);
+                break;
+            case "CREATE_USER_PROFILE" :
+                employeeHandler.handleUserProfile(in,out);
                 break;
             default:
                 System.out.println("--------------");

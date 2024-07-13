@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.example.controller.ChefController;
 import org.example.controller.FoodItemController;
+import org.example.controller.NotificationController;
 import org.example.model.FoodItem;
 import org.example.model.RecommendedDTO;
 
@@ -20,9 +21,12 @@ public class ChefHandlerImpl implements ChefHandler{
 
     private FoodItemController foodItemController;
 
+    private NotificationController notificationController;
+
     public ChefHandlerImpl() throws SQLException {
         this.chefController = new ChefController();
         this.foodItemController = new FoodItemController();
+        this.notificationController = new NotificationController();
     }
 
     private Gson gson = new Gson();
@@ -77,5 +81,29 @@ public class ChefHandlerImpl implements ChefHandler{
     public void handleNotifications(BufferedReader in, PrintWriter out) {
         String notificationJson = chefController.getNotification();
         out.println(notificationJson);
+    }
+
+    public void handleDiscardMenuItems(BufferedReader in, PrintWriter out) throws IOException {
+             String discardItemJson = chefController.ViewDiscardItem();
+             out.println(discardItemJson);
+             String response = in.readLine();
+        if("Discard_Food_Items".equals(response))
+        {
+           String foodItemIdsJson = in.readLine();
+            List<Integer> foodItemIds = gson.fromJson(foodItemIdsJson, new TypeToken<List<Integer>>() {
+            }.getType());
+
+            String discardResponse = chefController.DiscardItem(foodItemIds);
+            out.println(discardResponse);
+        }
+        if("Send_Notification".equals(response))
+        {
+            String foodItemJson = in.readLine();
+            List<FoodItem> foodItems = gson.fromJson(foodItemJson, new TypeToken<List<FoodItem>>() {
+            }.getType());
+            String notificationResponse =  notificationController.sendNotification(foodItems);
+            out.println(notificationResponse);
+        }
+
     }
 }

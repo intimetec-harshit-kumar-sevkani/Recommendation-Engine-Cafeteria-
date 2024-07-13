@@ -4,6 +4,7 @@ import org.example.model.FoodItem;
 import org.example.model.Notification;
 import org.example.model.RecommendedDTO;
 import org.example.model.RollOutFoodItemsDTO;
+import org.example.service.FoodItemService;
 import org.example.service.NotificationService;
 import org.example.service.RecommendationService;
 import org.example.service.VotedItemService;
@@ -16,6 +17,8 @@ import static org.example.util.JsonUtil.gson;
 public class ChefController {
     private RecommendationService recommendationService;
 
+    private FoodItemService foodItemService;
+
     private VotedItemService votedItemService;
 
     private NotificationService notificationService;
@@ -24,6 +27,7 @@ public class ChefController {
         this.recommendationService = new RecommendationService();
         this.votedItemService = new VotedItemService();
         this.notificationService = new NotificationService();
+        this.foodItemService = new FoodItemService();
     }
 
     public String getRecommendedFoodItems(RecommendedDTO recommendedDTO) {
@@ -60,6 +64,27 @@ public class ChefController {
             List<Notification> notifications = notificationService.getNotification();
             String notificationJson = gson.toJson(notifications);
             return notificationJson;
+        }
+        catch (SQLException e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    public String ViewDiscardItem() {
+        try {
+            List<FoodItem> foodItems = recommendationService.getDiscardedFoodItems();
+            String discardItemJson = gson.toJson(foodItems);
+            return discardItemJson;
+        }
+        catch (SQLException e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    public String DiscardItem(List<Integer> foodItemIds) {
+        try {
+            foodItemService.discardFoodItem(foodItemIds);
+           return "Food items discarded successfully";
         }
         catch (SQLException e) {
             return "Error: " + e.getMessage();

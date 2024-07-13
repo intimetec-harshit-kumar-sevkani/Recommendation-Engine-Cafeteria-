@@ -11,6 +11,6 @@ public interface EmployeeHandler {
     void handleVotedFoodItems(BufferedReader in, PrintWriter out) throws IOException, SQLException;
     void handleNotifications(BufferedReader in, PrintWriter out) throws IOException, SQLException;
     void handleTodayMenuItems(BufferedReader in, PrintWriter out) throws IOException, SQLException;
-
+    void handleUserProfile(BufferedReader in, PrintWriter out) throws IOException, SQLException;
 }
 

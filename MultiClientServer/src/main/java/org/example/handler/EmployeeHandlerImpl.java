@@ -6,6 +6,7 @@ import org.example.controller.EmployeeController;
 import org.example.controller.FoodItemController;
 import org.example.model.Feedback;
 import org.example.model.FoodItem;
+import org.example.model.UserProfile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -66,8 +67,7 @@ public class EmployeeHandlerImpl implements EmployeeHandler{
                 out.println("No valid IDs entered.");
             }
             else {
-                List<Integer> votedItems = gson.fromJson(votedItemIdsJson, new TypeToken<List<Integer>>() {
-                }.getType());
+                List<Integer> votedItems = gson.fromJson(votedItemIdsJson, new TypeToken<List<Integer>>() {}.getType());
                 String response = employeeController.voteFoodItem(votedItems);
                 out.println(response);
             }
@@ -77,5 +77,13 @@ public class EmployeeHandlerImpl implements EmployeeHandler{
     public void handleTodayMenuItems(BufferedReader in, PrintWriter out) throws IOException {
         String foodItemsJson = employeeController.viewTodayMenu();
         out.println(foodItemsJson);
+    }
+
+    public void handleUserProfile(BufferedReader in, PrintWriter out) throws IOException {
+
+        String userProfileJson = in.readLine();
+        UserProfile userProfile = gson.fromJson(userProfileJson, UserProfile.class);
+        String response = employeeController.addUserProfile(userProfile);
+        out.println(response);
     }
 }

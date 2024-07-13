@@ -39,4 +39,10 @@ public class FoodItemService {
     public List<FoodItem> getAllFoodItems() throws SQLException {
         return foodItemRepository.getAllFoodItems();
     }
+
+
+    public void discardFoodItem(List<Integer> foodItemIds) throws SQLException {
+        foodItemRepository.discardFoodItems(foodItemIds);
+    }
+
 }
