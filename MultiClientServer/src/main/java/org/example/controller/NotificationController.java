@@ -1,13 +1,10 @@
 package org.example.controller;
 
 import org.example.model.FoodItem;
-import org.example.model.Notification;
 import org.example.service.NotificationService;
 
 import java.sql.SQLException;
 import java.util.List;
-
-import static org.example.util.JsonUtil.gson;
 
 public class NotificationController {
 

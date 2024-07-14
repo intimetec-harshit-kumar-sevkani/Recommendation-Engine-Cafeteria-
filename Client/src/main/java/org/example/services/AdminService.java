@@ -7,7 +7,6 @@ import org.example.models.MessageType;
 import org.example.models.Notification;
 import org.example.utils.ClientUtil;
 import org.example.utils.EntityTablePrinter;
-import org.example.utils.MessageUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,10 +17,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AdminService {
-
-
     public static void handleAddFoodItem(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , InetAddress ip) throws IOException {
-       // MessageUtils.sendMessage(out, gson, new MessageType("ADD_FOOD_ITEM"));
         ClientUtil.sendMessage(out,gson,new MessageType("ADD_FOOD_ITEM"),ip);
 
         System.out.println("Enter meal type ID:");
@@ -49,14 +45,12 @@ public class AdminService {
         boolean sweetTooth = Boolean.parseBoolean(scanner.nextLine().trim());
 
         FoodItem foodItem = new FoodItem(mealTypeId, name, price, isAvailable, false , foodType , spiceLevel , originality , sweetTooth);
-       // MessageUtils.sendMessage(out, gson, foodItem);
         ClientUtil.sendMessage(out,gson,foodItem,ip);
-        System.out.println(MessageUtils.receiveMessage(in));
+        System.out.println(ClientUtil.receiveMessage(in));
     }
 
-    public static void handleUpdateFoodItem(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("UPDATE_FOOD_ITEM"));
-
+    public static void handleUpdateFoodItem(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , InetAddress ip) throws IOException {
+        ClientUtil.sendMessage(out,gson,new MessageType("UPDATE_FOOD_ITEM"),ip);
         System.out.println("Enter food ID to update:");
         int id = Integer.parseInt(scanner.nextLine());
         System.out.println("Enter new meal type ID:");
@@ -82,29 +76,27 @@ public class AdminService {
 
 
         FoodItem foodItem = new FoodItem(id, mealTypeId, name, price, isAvailable, false , foodType,spiceLevel,originality,sweetTooth);
-        MessageUtils.sendMessage(out, gson, foodItem);
-        System.out.println(MessageUtils.receiveMessage(in));
+
+        ClientUtil.sendMessage(out,gson,foodItem,ip);
+        System.out.println(ClientUtil.receiveMessage(in));
     }
 
-    public static void handleDeleteFoodItem(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("DELETE_FOOD_ITEM"));
-
+    public static void handleDeleteFoodItem(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson ,  InetAddress ip) throws IOException {
+        ClientUtil.sendMessage(out,gson,new MessageType("DELETE_FOOD_ITEM"),ip);
         System.out.println("Enter food ID to delete:");
         int id = Integer.parseInt(scanner.nextLine());
-        out.println(id);
-        System.out.println(MessageUtils.receiveMessage(in));
+        ClientUtil.sendMessage(out,gson,id,ip);
+        System.out.println(ClientUtil.receiveMessage(in));
     }
 
-    public static void handleViewAllFoodItems(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_ALL_FOOD_ITEMS"));
-
-        List<FoodItem> foodItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
-        // foodItems.forEach(System.out::println);
+    public static void handleViewAllFoodItems(PrintWriter out, BufferedReader in, Gson gson,  InetAddress ip) throws IOException {
+        ClientUtil.sendMessage(out,gson,new MessageType("VIEW_ALL_FOOD_ITEMS"),ip);
+        List<FoodItem> foodItems = ClientUtil.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
         EntityTablePrinter.printEntitiesAsTable(foodItems);
     }
-    public static void handleViewNotification(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_NOTIFICATION"));
-        String notificationJson = in.readLine();
+    public static void handleViewNotification(PrintWriter out, BufferedReader in, Gson gson,  InetAddress ip) throws IOException {
+        ClientUtil.sendMessage(out,gson,new MessageType("VIEW_NOTIFICATION"),ip);
+        String notificationJson = ClientUtil.receiveMessage(in);
         List<Notification> notifications = gson.fromJson(notificationJson, new TypeToken<List<Notification>>(){}.getType());
         notifications.forEach(System.out::println);
     }

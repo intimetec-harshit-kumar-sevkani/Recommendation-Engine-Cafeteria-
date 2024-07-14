@@ -2,7 +2,6 @@ package org.example.util;
 
 import org.example.model.FoodItem;
 import org.example.model.UserProfile;
-import org.example.service.*;
 
 import java.sql.SQLException;
 import java.util.Comparator;

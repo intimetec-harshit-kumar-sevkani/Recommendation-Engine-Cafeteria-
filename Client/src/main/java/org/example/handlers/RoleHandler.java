@@ -9,8 +9,7 @@ import java.net.InetAddress;
 import java.util.Scanner;
 
 public interface RoleHandler {
-    //boolean handleSelection(String selection, Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException;
-    boolean handleSelection(String selection, Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId , InetAddress ip) throws IOException;
+       boolean handleSelection(String selection, Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId , InetAddress ip) throws IOException;
 
 
 }

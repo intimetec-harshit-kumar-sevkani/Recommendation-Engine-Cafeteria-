@@ -3,25 +3,25 @@ package org.example.services;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.example.models.*;
-import org.example.utils.MessageUtils;
+import org.example.utils.ClientUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class EmployeeService {
+    public static void handleViewAllFoodItems(PrintWriter out, BufferedReader in, Gson gson, InetAddress ip) throws IOException {
+        ClientUtil.sendMessage(out, gson, new MessageType("VIEW_ALL_FOOD_ITEMS"), ip);
 
-    public static void handleViewAllFoodItems(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_ALL_FOOD_ITEMS"));
-
-        List<FoodItem> foodItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
+        List<FoodItem> foodItems = ClientUtil.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
         foodItems.forEach(System.out::println);
     }
 
-    public static void handleGiveFeedback(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("GIVE_FEEDBACK"));
+    public static void handleGiveFeedback(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId, InetAddress ip) throws IOException {
+        ClientUtil.sendMessage(out, gson, new MessageType("GIVE_FEEDBACK"),ip);
 
         Feedback feedback = new Feedback();
         System.out.println("Enter food Item Id : ");
@@ -36,21 +36,21 @@ public class EmployeeService {
         feedback.setUserId(userId);
         feedback.setDelete(false);
 
-        MessageUtils.sendMessage(out, gson, feedback);
-        System.out.println(MessageUtils.receiveMessage(in));
+        ClientUtil.sendMessage(out, gson, feedback,ip);
+        System.out.println(ClientUtil.receiveMessage(in));
     }
 
-    public static void handleGiveVote(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("VOTE_RECOMMENDED_ITEMS"));
+    public static void handleGiveVote(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId, InetAddress ip) throws IOException {
+        ClientUtil.sendMessage(out, gson, new MessageType("VOTE_RECOMMENDED_ITEMS"),ip);
 
         Set<String> validMealTypes = new HashSet<>(Arrays.asList("Breakfast", "Lunch", "Dinner"));
 
         System.out.println("Enter Meal Type : ");
         String mealType = scanner.nextLine();
         if(validMealTypes.contains(mealType)) {
-            out.println(mealType);
-            out.println(userId);
-            String voteItemJson = in.readLine();
+            ClientUtil.sendMessage(out,gson,mealType,ip);
+            ClientUtil.sendMessage(out,gson,userId,ip);
+            String voteItemJson = ClientUtil.receiveMessage(in);
             List<FoodItem> votedItemList = gson.fromJson(voteItemJson, new TypeToken<List<FoodItem>>() {
             }.getType());
             votedItemList.forEach(System.out::println);
@@ -72,38 +72,38 @@ public class EmployeeService {
             }
 
             if (votedItemIds.isEmpty()) {
-                out.println("No valid IDs");
-                System.out.println(MessageUtils.receiveMessage(in));
+                ClientUtil.sendMessage(out,gson,"No valid IDs",ip);
+                System.out.println(ClientUtil.receiveMessage(in));
             } else {
                 String votedItemIdsJson = gson.toJson(votedItemIds);
                 out.println(votedItemIdsJson);
-                String response = in.readLine();
+                String response = ClientUtil.receiveMessage(in);
                 System.out.println(response);
             }
         }else {
-            out.println("Invalid Meal Type");
-            System.out.println(MessageUtils.receiveMessage(in));
+            ClientUtil.sendMessage(out,gson,"Invalid Meal Type",ip);
+            System.out.println(ClientUtil.receiveMessage(in));
         }
 
     }
 
-    public static void handleNotification(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_NOTIFICATION"));
-        String notificationJson = in.readLine();
+    public static void handleNotification(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId, InetAddress ip) throws IOException {
+        ClientUtil.sendMessage(out, gson, new MessageType("VIEW_NOTIFICATION"), ip);
+        String notificationJson = ClientUtil.receiveMessage(in);
         List<Notification> notifications = gson.fromJson(notificationJson, new TypeToken<List<Notification>>(){}.getType());
         notifications.forEach(System.out::println);
     }
 
-    public static void handleTodayMenuItems(PrintWriter out, BufferedReader in, Gson gson , int userId) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("VIEW_TODAY_MENU"));
-        out.println(userId);
-        String foodItemJson = in.readLine();
+    public static void handleTodayMenuItems(PrintWriter out, BufferedReader in, Gson gson , int userId, InetAddress ip) throws IOException {
+        ClientUtil.sendMessage(out, gson, new MessageType("VIEW_TODAY_MENU"),ip);
+        ClientUtil.sendMessage(out,gson,userId,ip);
+        String foodItemJson = ClientUtil.receiveMessage(in);
         List<FoodItem> foodItems =  gson.fromJson(foodItemJson, new TypeToken<List<FoodItem>>(){}.getType());
         foodItems.forEach(System.out::println);
     }
 
-    public static void handleUserProfile(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , int userId ) throws IOException {
-        MessageUtils.sendMessage(out, gson, new MessageType("CREATE_USER_PROFILE"));
+    public static void handleUserProfile(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , int userId, InetAddress ip ) throws IOException {
+        ClientUtil.sendMessage(out, gson, new MessageType("CREATE_USER_PROFILE"),ip);
 
         System.out.print("Enter Food Type: ");
         String foodType = scanner.nextLine().trim();
@@ -117,11 +117,10 @@ public class EmployeeService {
         System.out.print("Do you have a sweet tooth? (true/false): ");
         boolean sweetTooth = Boolean.parseBoolean(scanner.nextLine().trim());
 
-        // Create UserProfile object
         UserProfile userProfile = new UserProfile(userId, foodType, spiceLevel, originality, sweetTooth);
-        MessageUtils.sendMessage(out, gson, userProfile);
+        ClientUtil.sendMessage(out, gson, userProfile,ip);
 
-        System.out.println(MessageUtils.receiveMessage(in));
+        System.out.println(ClientUtil.receiveMessage(in));
     }
 
 }

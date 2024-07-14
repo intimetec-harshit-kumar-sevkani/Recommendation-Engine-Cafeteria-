@@ -40,8 +40,6 @@ public class RecommendationService {
 
     }
 
-    // getDiscardedFoodItems
-
     public List<FoodItem> getDiscardedFoodItems() throws SQLException {
         List<Integer> foodItemIds = foodItemRepository.getDiscardedFoodItems();
         List<FoodItem> foodItems = foodItemRepository.getById(foodItemIds);

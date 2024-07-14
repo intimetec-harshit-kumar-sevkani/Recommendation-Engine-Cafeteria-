@@ -27,8 +27,6 @@ public class AdminHandlerImpl implements AdminHandler, RoleHandler{
 
     private Gson gson = new Gson();
 
-
-
     @Override
     public void handleRequest(MessageType messageType, BufferedReader in, PrintWriter out) throws IOException, SQLException {
         switch (messageType.type) {
@@ -52,56 +50,48 @@ public class AdminHandlerImpl implements AdminHandler, RoleHandler{
         }
     }
 
-
-   /* public void handleAddFoodItem(BufferedReader in, PrintWriter out) throws IOException {
-        String foodItemJson = in.readLine();
-
-        FoodItem foodItem = gson.fromJson(foodItemJson, FoodItem.class);
-        String response = foodItemController.addFoodItem(foodItem);
-        out.println(response);
-    }*/
-
     public void handleAddFoodItem(BufferedReader in, PrintWriter out) throws IOException {
-        //String foodItemJson = in.readLine();
         MessageProcessor.MessageWrapper<FoodItem> wrapper = messageProcessor.processMessage(in, FoodItem.class);
         FoodItem foodItem = wrapper.getMessage();
         String response = foodItemController.addFoodItem(foodItem);
-        out.println(response);
+        messageProcessor.sendMessage(out, response);
     }
 
     public void handleUpdateFoodItem(BufferedReader in, PrintWriter out) throws IOException {
-        String payload = in.readLine();
-        FoodItem updatedFoodItem = gson.fromJson(payload, FoodItem.class);
+        MessageProcessor.MessageWrapper<FoodItem> wrapper = messageProcessor.processMessage(in, FoodItem.class);
+        FoodItem updatedFoodItem = wrapper.getMessage();
 
         String foodItemsJson = foodItemController.getAllFoodItems();
         List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
 
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
+        String response;
         if (validFoodItemIds.contains(updatedFoodItem.getId())) {
-            String response = foodItemController.updateFoodItem(updatedFoodItem);
-            out.println(response);
+            response = foodItemController.updateFoodItem(updatedFoodItem);
         } else {
-            out.println("Invalid Food Item Id.");
+            response = "Invalid Food Item Id.";
         }
+        messageProcessor.sendMessage(out, response);
     }
 
     public void handleDeleteFoodItem(BufferedReader in, PrintWriter out) throws IOException {
-        int id = Integer.parseInt(in.readLine());
+        MessageProcessor.MessageWrapper<Integer> wrapper = messageProcessor.processMessage(in, Integer.class);
+        int id = wrapper.getMessage();
 
         String foodItemsJson = foodItemController.getAllFoodItems();
         List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
 
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
+        String response;
         if (validFoodItemIds.contains(id)) {
-            String response = foodItemController.deleteFoodItem(id);
-            out.println(response);
+            response = foodItemController.deleteFoodItem(id);
         } else {
-            out.println("Invalid Food Item Id.");
+            response = "Invalid Food Item Id.";
         }
+        messageProcessor.sendMessage(out, response);
     }
-
 
     public void handleViewAllFoodItems(PrintWriter out) throws IOException {
         String foodItemsJson = foodItemController.getAllFoodItems();
@@ -110,6 +100,7 @@ public class AdminHandlerImpl implements AdminHandler, RoleHandler{
 
     public void handleNotifications(BufferedReader in, PrintWriter out) throws IOException {
         String notificationJson = foodItemController.getNotification();
-        out.println(notificationJson);
+        messageProcessor.sendMessage(out, notificationJson);
     }
+
 }

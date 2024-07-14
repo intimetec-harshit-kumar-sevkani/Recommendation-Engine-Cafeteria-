@@ -8,6 +8,7 @@ import org.example.model.Feedback;
 import org.example.model.FoodItem;
 import org.example.model.MessageType;
 import org.example.model.UserProfile;
+import org.example.util.MessageProcessor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,16 +18,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class EmployeeHandlerImpl implements EmployeeHandler, RoleHandler{
-    private FoodItemController foodItemController;
-    private EmployeeController employeeController;
+public class EmployeeHandlerImpl implements EmployeeHandler, RoleHandler {
+    private final FoodItemController foodItemController;
+    private final EmployeeController employeeController;
+    private final MessageProcessor messageProcessor;
+
     public EmployeeHandlerImpl() throws SQLException {
         this.foodItemController = new FoodItemController();
         this.employeeController = new EmployeeController();
+        this.messageProcessor = new MessageProcessor(new Gson());
     }
-
-    private Gson gson = new Gson();
-
 
     @Override
     public void handleRequest(MessageType messageType, BufferedReader in, PrintWriter out) throws IOException, SQLException {
@@ -50,74 +51,78 @@ public class EmployeeHandlerImpl implements EmployeeHandler, RoleHandler{
                 handleUserProfile(in, out);
                 break;
             default:
-                System.out.println("--------------");
+                System.out.println("Unknown message type: " + messageType.type);
         }
     }
 
-
-
     public void handleViewAllFoodItems(PrintWriter out) throws IOException {
         String foodItemsJson = foodItemController.getAllFoodItems();
-        out.println(foodItemsJson);
+        messageProcessor.sendMessage(out, foodItemsJson);
     }
 
     public void handleFeedback(BufferedReader in, PrintWriter out) throws IOException {
-        String feedbackJson = in.readLine();
-        Feedback feedback = gson.fromJson(feedbackJson, Feedback.class);
+        MessageProcessor.MessageWrapper<Feedback> feedbackWrapper = messageProcessor.processMessage(in, Feedback.class);
+        Feedback feedback = feedbackWrapper.getMessage();
 
         String foodItemsJson = foodItemController.getAllFoodItems();
-        List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
+        List<FoodItem> foodItems = new Gson().fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
 
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
         if (validFoodItemIds.contains(feedback.getFoodItemId())) {
             String response = employeeController.addFeedback(feedback);
-            out.println(response);
+            messageProcessor.sendMessage(out, response);
         } else {
-            out.println("Invalid Food Item Id");
+            messageProcessor.sendMessage(out, "Invalid Food Item Id");
         }
     }
 
     public void handleNotifications(BufferedReader in, PrintWriter out) throws IOException {
         String notificationJson = employeeController.getNotification();
-        out.println(notificationJson);
+        messageProcessor.sendMessage(out, notificationJson);
     }
 
     public void handleVotedFoodItems(BufferedReader in, PrintWriter out) throws IOException {
-        String mealType = in.readLine();
-        if("Invalid Meal Type".equals(mealType))
-        {
-            out.println("Invalid Meal Type. Valid Meal Types are: Breakfast, Lunch, and Dinner.");
+        MessageProcessor.MessageWrapper<String> mealTypeWrapper = messageProcessor.processMessage(in, String.class);
+        String mealType = mealTypeWrapper.getMessage();
+
+        if ("Invalid Meal Type".equals(mealType)) {
+            messageProcessor.sendMessage(out, "Invalid Meal Type. Valid Meal Types are: Breakfast, Lunch, and Dinner.");
         } else {
-            String userIdJson = in.readLine();
-            int userId = gson.fromJson(userIdJson, Integer.class);
+            MessageProcessor.MessageWrapper<Integer> userIdWrapper = messageProcessor.processMessage(in, Integer.class);
+            int userId = userIdWrapper.getMessage();
+
             String foodItemsJson = employeeController.viewRollOutItem(mealType, userId);
-            out.println(foodItemsJson);
+            messageProcessor.sendMessage(out, foodItemsJson);
+
+            /*MessageProcessor.MessageWrapper<String> votedItemIdsWrapper = messageProcessor.processMessage(in, String.class);
+            String votedItemIdsJson = votedItemIdsWrapper.getMessage();*/
             String votedItemIdsJson = in.readLine();
-            if("No valid IDs".equals(votedItemIdsJson))
-            {
-                out.println("No valid IDs entered.");
-            }
-            else {
-                List<Integer> votedItems = gson.fromJson(votedItemIdsJson, new TypeToken<List<Integer>>() {}.getType());
+
+            if ("No valid IDs".equals(votedItemIdsJson)) {
+                messageProcessor.sendMessage(out, "No valid IDs entered.");
+            } else {
+                List<Integer> votedItems = new Gson().fromJson(votedItemIdsJson, new TypeToken<List<Integer>>() {}.getType());
                 String response = employeeController.voteFoodItem(votedItems);
-                out.println(response);
+                messageProcessor.sendMessage(out, response);
             }
         }
-
     }
+
     public void handleTodayMenuItems(BufferedReader in, PrintWriter out) throws IOException {
-        String userIdJson = in.readLine();
-        int userId = gson.fromJson(userIdJson, Integer.class);
+        MessageProcessor.MessageWrapper<Integer> userIdWrapper = messageProcessor.processMessage(in, Integer.class);
+        int userId = userIdWrapper.getMessage();
+
         String foodItemsJson = employeeController.viewTodayMenu(userId);
-        out.println(foodItemsJson);
+        messageProcessor.sendMessage(out, foodItemsJson);
     }
 
     public void handleUserProfile(BufferedReader in, PrintWriter out) throws IOException {
+        MessageProcessor.MessageWrapper<UserProfile> userProfileWrapper = messageProcessor.processMessage(in, UserProfile.class);
+        UserProfile userProfile = userProfileWrapper.getMessage();
 
-        String userProfileJson = in.readLine();
-        UserProfile userProfile = gson.fromJson(userProfileJson, UserProfile.class);
         String response = employeeController.addUserProfile(userProfile);
-        out.println(response);
+        messageProcessor.sendMessage(out, response);
     }
 }
+

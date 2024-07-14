@@ -2,7 +2,6 @@ package org.example.utils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class EntityTablePrinter {
@@ -43,14 +42,11 @@ public class EntityTablePrinter {
     }
 
     private static void printTable(List<String> headers, List<List<String>> rows) {
-        // Print headers with color
         System.out.print(HEADER_COLOR);
         for (String header : headers) {
             System.out.print(String.format("%-20s", header));
         }
         System.out.println(RESET_COLOR);
-
-        // Print rows with color
         for (List<String> row : rows) {
             System.out.print(DATA_COLOR);
             for (String data : row) {

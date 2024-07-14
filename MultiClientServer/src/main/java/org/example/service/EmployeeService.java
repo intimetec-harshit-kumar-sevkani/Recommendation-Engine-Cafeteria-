@@ -1,8 +1,6 @@
 package org.example.service;
 
-import org.example.model.FoodItem;
 import org.example.model.UserProfile;
-import org.example.repository.FeedbackRepository;
 import org.example.repository.UserProfileRepository;
 
 import java.sql.SQLException;
