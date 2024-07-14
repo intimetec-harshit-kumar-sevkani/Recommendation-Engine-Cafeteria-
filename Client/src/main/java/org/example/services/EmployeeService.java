@@ -1,57 +1,26 @@
-package org.example.handlers;
+package org.example.services;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.example.models.*;
-import org.example.services.EmployeeService;
 import org.example.utils.MessageUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class EmployeeHandler implements RoleHandler {
+public class EmployeeService {
 
-    public boolean handleSelection(String selection, Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId, InetAddress ip) throws IOException {
-        switch (selection) {
-            case "1":
-                EmployeeService.handleViewAllFoodItems(out, in, gson);
-                return false;
-            case "2":
-                EmployeeService.handleGiveFeedback(scanner, out, in, gson, userId);
-                return false;
-            case "3":
-                EmployeeService.handleGiveVote(scanner, out, in, gson, userId);
-                return false;
-            case "4":
-                EmployeeService.handleNotification(scanner, out, in, gson, userId);
-                return false;
-            case "5":
-                EmployeeService.handleTodayMenuItems(out, in, gson,userId);
-                return false;
-            case "6" :
-                EmployeeService.handleUserProfile(scanner,out, in, gson, userId);
-                return false;
-            case "7":
-                System.out.println("Exiting...");
-                return true;
-            default:
-                System.out.println("Invalid selection.");
-                return false;
-        }
-    }
-
-   /* private static void handleViewAllFoodItems(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
+    public static void handleViewAllFoodItems(PrintWriter out, BufferedReader in, Gson gson) throws IOException {
         MessageUtils.sendMessage(out, gson, new MessageType("VIEW_ALL_FOOD_ITEMS"));
 
         List<FoodItem> foodItems = MessageUtils.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
         foodItems.forEach(System.out::println);
     }
 
-    private static void handleGiveFeedback(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
+    public static void handleGiveFeedback(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
         MessageUtils.sendMessage(out, gson, new MessageType("GIVE_FEEDBACK"));
 
         Feedback feedback = new Feedback();
@@ -71,7 +40,7 @@ public class EmployeeHandler implements RoleHandler {
         System.out.println(MessageUtils.receiveMessage(in));
     }
 
-    private static void handleGiveVote(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
+    public static void handleGiveVote(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
         MessageUtils.sendMessage(out, gson, new MessageType("VOTE_RECOMMENDED_ITEMS"));
 
         Set<String> validMealTypes = new HashSet<>(Arrays.asList("Breakfast", "Lunch", "Dinner"));
@@ -118,14 +87,14 @@ public class EmployeeHandler implements RoleHandler {
 
     }
 
-    private static void handleNotification(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
+    public static void handleNotification(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, int userId) throws IOException {
         MessageUtils.sendMessage(out, gson, new MessageType("VIEW_NOTIFICATION"));
         String notificationJson = in.readLine();
         List<Notification> notifications = gson.fromJson(notificationJson, new TypeToken<List<Notification>>(){}.getType());
         notifications.forEach(System.out::println);
     }
 
-    private static void handleTodayMenuItems(PrintWriter out, BufferedReader in, Gson gson , int userId) throws IOException {
+    public static void handleTodayMenuItems(PrintWriter out, BufferedReader in, Gson gson , int userId) throws IOException {
         MessageUtils.sendMessage(out, gson, new MessageType("VIEW_TODAY_MENU"));
         out.println(userId);
         String foodItemJson = in.readLine();
@@ -133,7 +102,7 @@ public class EmployeeHandler implements RoleHandler {
         foodItems.forEach(System.out::println);
     }
 
-    private static void handleUserProfile(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , int userId ) throws IOException {
+    public static void handleUserProfile(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , int userId ) throws IOException {
         MessageUtils.sendMessage(out, gson, new MessageType("CREATE_USER_PROFILE"));
 
         System.out.print("Enter Food Type: ");
@@ -153,7 +122,6 @@ public class EmployeeHandler implements RoleHandler {
         MessageUtils.sendMessage(out, gson, userProfile);
 
         System.out.println(MessageUtils.receiveMessage(in));
-    }*/
+    }
 
 }
-

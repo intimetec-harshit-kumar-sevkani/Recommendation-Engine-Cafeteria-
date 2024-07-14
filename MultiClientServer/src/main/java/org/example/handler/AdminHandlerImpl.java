@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.example.controller.FoodItemController;
 import org.example.model.FoodItem;
+import org.example.model.MessageType;
+import org.example.util.MessageProcessor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,18 +15,56 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AdminHandlerImpl implements AdminHandler{
+public class AdminHandlerImpl implements AdminHandler, RoleHandler{
 
     private FoodItemController foodItemController;
+    private final MessageProcessor messageProcessor;
 
     public AdminHandlerImpl() throws SQLException {
         this.foodItemController = new FoodItemController();
+        this.messageProcessor = new MessageProcessor(gson);
     }
 
     private Gson gson = new Gson();
-    public void handleAddFoodItem(BufferedReader in, PrintWriter out) throws IOException {
+
+
+
+    @Override
+    public void handleRequest(MessageType messageType, BufferedReader in, PrintWriter out) throws IOException, SQLException {
+        switch (messageType.type) {
+            case "ADD_FOOD_ITEM":
+                handleAddFoodItem(in, out);
+                break;
+            case "UPDATE_FOOD_ITEM":
+                handleUpdateFoodItem(in, out);
+                break;
+            case "DELETE_FOOD_ITEM":
+                handleDeleteFoodItem(in, out);
+                break;
+            case "VIEW_ALL_FOOD_ITEMS":
+                handleViewAllFoodItems(out);
+                break;
+            case "VIEW_NOTIFICATION":
+                handleNotifications(in, out);
+                break;
+            default:
+                System.out.println("--------------");
+        }
+    }
+
+
+   /* public void handleAddFoodItem(BufferedReader in, PrintWriter out) throws IOException {
         String foodItemJson = in.readLine();
+
         FoodItem foodItem = gson.fromJson(foodItemJson, FoodItem.class);
+        String response = foodItemController.addFoodItem(foodItem);
+        out.println(response);
+    }*/
+
+    public void handleAddFoodItem(BufferedReader in, PrintWriter out) throws IOException {
+        //String foodItemJson = in.readLine();
+        MessageProcessor.MessageWrapper<FoodItem> wrapper = messageProcessor.processMessage(in, FoodItem.class);
+        FoodItem foodItem = wrapper.getMessage();
         String response = foodItemController.addFoodItem(foodItem);
         out.println(response);
     }

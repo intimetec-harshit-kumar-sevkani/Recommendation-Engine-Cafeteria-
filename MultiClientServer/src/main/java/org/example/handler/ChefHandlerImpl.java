@@ -6,6 +6,7 @@ import org.example.controller.ChefController;
 import org.example.controller.FoodItemController;
 import org.example.controller.NotificationController;
 import org.example.model.FoodItem;
+import org.example.model.MessageType;
 import org.example.model.RecommendedDTO;
 
 import java.io.BufferedReader;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ChefHandlerImpl implements ChefHandler{
+public class ChefHandlerImpl implements ChefHandler, RoleHandler{
     private ChefController chefController;
 
     private FoodItemController foodItemController;
@@ -30,6 +31,34 @@ public class ChefHandlerImpl implements ChefHandler{
     }
 
     private Gson gson = new Gson();
+
+
+    @Override
+    public void handleRequest(MessageType messageType, BufferedReader in, PrintWriter out) throws IOException, SQLException {
+        switch (messageType.type) {
+            case "GET_RECOMMENDED_ITEMS":
+                handleRecommendationFoodItems(in, out);
+                break;
+            case "GET_VOTED_ITEMS":
+                handleRollOutItems(in, out);
+                break;
+            case "VIEW_ALL_FOOD_ITEMS":
+                handleViewAllFoodItems(out);
+                break;
+            case "VIEW_NOTIFICATION":
+                handleNotifications(in, out);
+                break;
+            case "VIEW_DISCARD_ITEMS":
+                handleDiscardMenuItems(in, out);
+                break;
+            default:
+                System.out.println("--------------");
+        }
+    }
+
+
+
+
     public void handleRecommendationFoodItems(BufferedReader in,PrintWriter out) throws IOException {
         String recommendedDTOJson = in.readLine();
         if("Invalid Meal Type".equals(recommendedDTOJson))

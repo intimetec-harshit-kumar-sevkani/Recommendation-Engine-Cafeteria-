@@ -18,4 +18,9 @@ public class EmployeeService {
     public void addUserProfile(UserProfile userProfile) throws SQLException {
         userProfileRepository.insertUserProfile(userProfile);
     }
+
+    public UserProfile getUserProfile(int userId) throws SQLException {
+        return userProfileRepository.getUserProfile(userId);
+    }
+
 }

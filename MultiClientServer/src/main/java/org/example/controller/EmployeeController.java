@@ -6,6 +6,7 @@ import org.example.model.FoodItem;
 import org.example.model.Notification;
 import org.example.model.UserProfile;
 import org.example.service.*;
+import org.example.util.SortFoodItems;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -50,10 +51,12 @@ public class EmployeeController {
         }
     }
 
-    public String viewRollOutItem(String mealType) {
+    public String viewRollOutItem(String mealType, int userId) {
         try {
             List<FoodItem> foodItems = votedItemService.viewFoodItem(mealType);
-            String foodItemsJson = gson.toJson(foodItems);
+            UserProfile userProfile = employeeService.getUserProfile(userId);
+            List<FoodItem> sortFoodItems = SortFoodItems.sortFoodItems(foodItems,userProfile);
+            String foodItemsJson = gson.toJson(sortFoodItems);
             return foodItemsJson;
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
@@ -71,10 +74,12 @@ public class EmployeeController {
         }
     }
 
-    public String viewTodayMenu() {
+    public String viewTodayMenu(int userId) {
         try {
             List<FoodItem> foodItems = votedItemService.getPreparedFoodItems();
-            String foodItemsJson = gson.toJson(foodItems);
+            UserProfile userProfile = employeeService.getUserProfile(userId);
+            List<FoodItem> sortFoodItems = SortFoodItems.sortFoodItems(foodItems,userProfile);
+            String foodItemsJson = gson.toJson(sortFoodItems);
             return foodItemsJson;
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
@@ -89,7 +94,5 @@ public class EmployeeController {
             return "Error: " + e.getMessage();
         }
     }
-
-
 
 }

@@ -6,6 +6,7 @@ import org.example.controller.EmployeeController;
 import org.example.controller.FoodItemController;
 import org.example.model.Feedback;
 import org.example.model.FoodItem;
+import org.example.model.MessageType;
 import org.example.model.UserProfile;
 
 import java.io.BufferedReader;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class EmployeeHandlerImpl implements EmployeeHandler{
+public class EmployeeHandlerImpl implements EmployeeHandler, RoleHandler{
     private FoodItemController foodItemController;
     private EmployeeController employeeController;
     public EmployeeHandlerImpl() throws SQLException {
@@ -25,6 +26,35 @@ public class EmployeeHandlerImpl implements EmployeeHandler{
     }
 
     private Gson gson = new Gson();
+
+
+    @Override
+    public void handleRequest(MessageType messageType, BufferedReader in, PrintWriter out) throws IOException, SQLException {
+        switch (messageType.type) {
+            case "VIEW_ALL_FOOD_ITEMS":
+                handleViewAllFoodItems(out);
+                break;
+            case "GIVE_FEEDBACK":
+                handleFeedback(in, out);
+                break;
+            case "VOTE_RECOMMENDED_ITEMS":
+                handleVotedFoodItems(in, out);
+                break;
+            case "VIEW_NOTIFICATION":
+                handleNotifications(in, out);
+                break;
+            case "VIEW_TODAY_MENU":
+                handleTodayMenuItems(in, out);
+                break;
+            case "CREATE_USER_PROFILE":
+                handleUserProfile(in, out);
+                break;
+            default:
+                System.out.println("--------------");
+        }
+    }
+
+
 
     public void handleViewAllFoodItems(PrintWriter out) throws IOException {
         String foodItemsJson = foodItemController.getAllFoodItems();
@@ -59,7 +89,9 @@ public class EmployeeHandlerImpl implements EmployeeHandler{
         {
             out.println("Invalid Meal Type. Valid Meal Types are: Breakfast, Lunch, and Dinner.");
         } else {
-            String foodItemsJson = employeeController.viewRollOutItem(mealType);
+            String userIdJson = in.readLine();
+            int userId = gson.fromJson(userIdJson, Integer.class);
+            String foodItemsJson = employeeController.viewRollOutItem(mealType, userId);
             out.println(foodItemsJson);
             String votedItemIdsJson = in.readLine();
             if("No valid IDs".equals(votedItemIdsJson))
@@ -75,7 +107,9 @@ public class EmployeeHandlerImpl implements EmployeeHandler{
 
     }
     public void handleTodayMenuItems(BufferedReader in, PrintWriter out) throws IOException {
-        String foodItemsJson = employeeController.viewTodayMenu();
+        String userIdJson = in.readLine();
+        int userId = gson.fromJson(userIdJson, Integer.class);
+        String foodItemsJson = employeeController.viewTodayMenu(userId);
         out.println(foodItemsJson);
     }
 

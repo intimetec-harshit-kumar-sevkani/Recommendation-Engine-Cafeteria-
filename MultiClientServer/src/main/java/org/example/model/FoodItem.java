@@ -10,6 +10,11 @@ public class FoodItem {
     private boolean isAvailable;
     private boolean isDelete;
 
+    private String foodType;
+    private String spiceLevel;
+    private String originality;
+    private boolean sweetTooth;
+
 
     public int getId() {
         return id;
@@ -57,5 +62,53 @@ public class FoodItem {
 
     public void setDelete(boolean delete) {
         isDelete = delete;
+    }
+
+    public String getFoodType() {
+        return foodType;
+    }
+
+    public void setFoodType(String foodType) {
+        this.foodType = foodType;
+    }
+
+    public String getSpiceLevel() {
+        return spiceLevel;
+    }
+
+    public void setSpiceLevel(String spiceLevel) {
+        this.spiceLevel = spiceLevel;
+    }
+
+    public String getOriginality() {
+        return originality;
+    }
+
+    public void setOriginality(String originality) {
+        this.originality = originality;
+    }
+
+    public boolean isSweetTooth() {
+        return sweetTooth;
+    }
+
+    public void setSweetTooth(boolean sweetTooth) {
+        this.sweetTooth = sweetTooth;
+    }
+
+    @Override
+    public String toString() {
+        return "FoodItem{" +
+                "id=" + id +
+                ", mealTypeId=" + mealTypeId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", isAvailable=" + isAvailable +
+                ", isDelete=" + isDelete +
+                ", foodType='" + foodType + '\'' +
+                ", spiceLevel='" + spiceLevel + '\'' +
+                ", originality='" + originality + '\'' +
+                ", sweetTooth=" + sweetTooth +
+                '}';
     }
 }

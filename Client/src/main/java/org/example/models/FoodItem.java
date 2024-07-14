@@ -10,25 +10,54 @@ public class FoodItem {
     private boolean isAvailable;
     private boolean isDelete;
 
+    private String foodType;
+    private String spiceLevel;
+    private String originality;
+    private boolean sweetTooth;
     public FoodItem() {
     }
 
-    public FoodItem(int id, int mealTypeId, String name, BigDecimal price, boolean isAvailable, boolean isDelete) {
+   /* public FoodItem(int id, int mealTypeId, String name, BigDecimal price, boolean isAvailable, boolean isDelete) {
         this.id = id;
         this.mealTypeId = mealTypeId;
         this.name = name;
         this.price = price;
         this.isAvailable = isAvailable;
         this.isDelete = isDelete;
-    }
+    }*/
 
-    public FoodItem(int mealTypeId, String name, BigDecimal price, boolean isAvailable, boolean isDelete) {
+    public FoodItem(int id, int mealTypeId, String name, BigDecimal price, boolean isAvailable, boolean isDelete, String foodType, String spiceLevel, String originality, boolean sweetTooth) {
+        this.id = id;
         this.mealTypeId = mealTypeId;
         this.name = name;
         this.price = price;
         this.isAvailable = isAvailable;
         this.isDelete = isDelete;
+        this.foodType = foodType;
+        this.spiceLevel = spiceLevel;
+        this.originality = originality;
+        this.sweetTooth = sweetTooth;
     }
+
+    public FoodItem(int mealTypeId, String name, BigDecimal price, boolean isAvailable, boolean isDelete, String foodType, String spiceLevel, String originality, boolean sweetTooth) {
+        this.mealTypeId = mealTypeId;
+        this.name = name;
+        this.price = price;
+        this.isAvailable = isAvailable;
+        this.isDelete = isDelete;
+        this.foodType = foodType;
+        this.spiceLevel = spiceLevel;
+        this.originality = originality;
+        this.sweetTooth = sweetTooth;
+    }
+
+   /* public FoodItem(int mealTypeId, String name, BigDecimal price, boolean isAvailable, boolean isDelete) {
+        this.mealTypeId = mealTypeId;
+        this.name = name;
+        this.price = price;
+        this.isAvailable = isAvailable;
+        this.isDelete = isDelete;
+    }*/
 
     public int getId() {
         return id;
@@ -78,6 +107,38 @@ public class FoodItem {
         isDelete = delete;
     }
 
+    public String getFoodType() {
+        return foodType;
+    }
+
+    public void setFoodType(String foodType) {
+        this.foodType = foodType;
+    }
+
+    public String getSpiceLevel() {
+        return spiceLevel;
+    }
+
+    public void setSpiceLevel(String spiceLevel) {
+        this.spiceLevel = spiceLevel;
+    }
+
+    public String getOriginality() {
+        return originality;
+    }
+
+    public void setOriginality(String originality) {
+        this.originality = originality;
+    }
+
+    public boolean isSweetTooth() {
+        return sweetTooth;
+    }
+
+    public void setSweetTooth(boolean sweetTooth) {
+        this.sweetTooth = sweetTooth;
+    }
+
     @Override
     public String toString() {
         return "FoodItem{" +
@@ -87,6 +148,10 @@ public class FoodItem {
                 ", price=" + price +
                 ", isAvailable=" + isAvailable +
                 ", isDelete=" + isDelete +
+                ", foodType='" + foodType + '\'' +
+                ", spiceLevel='" + spiceLevel + '\'' +
+                ", originality='" + originality + '\'' +
+                ", sweetTooth=" + sweetTooth +
                 '}';
     }
 }

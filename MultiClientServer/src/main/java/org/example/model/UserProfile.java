@@ -8,6 +8,9 @@ public class UserProfile {
     private String originality;
     private boolean sweetTooth;
 
+    public UserProfile() {
+    }
+
     public UserProfile(int userId, String foodType, String spiceLevel, String originality, boolean sweetTooth) {
         this.userId = userId;
         this.foodType = foodType;
