@@ -2,11 +2,9 @@ package org.example.models;
 
 public class LoginMessage {
     private String email;
-    private String name;
 
-    public LoginMessage(String email, String name) {
+    public LoginMessage(String email) {
         this.email = email;
-        this.name = name;
     }
 
 }

@@ -15,7 +15,7 @@ public class NotificationController {
         this.notificationService = new NotificationService();
     }
 
-    public String sendNotification(List<FoodItem> foodItems)  {
+    public String sendNotifications(List<FoodItem> foodItems)  {
         try {
             notificationService.sendNotificationForFeedback(foodItems);
             return "Notification Send Successfully";

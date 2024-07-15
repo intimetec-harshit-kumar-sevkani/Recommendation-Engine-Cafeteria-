@@ -33,10 +33,29 @@ public class SentimentAnalyzer {
         }
 
         double averageSentiment = (double) totalSentiment / count;
-        return sentimentToRating(averageSentiment);
+        return averageSentiment;
+       // return sentimentToRating(averageSentiment);
     }
 
     private static int sentimentToScore(String sentiment) {
+        switch (sentiment.toLowerCase()) {
+            case "very positive":
+                return 4;
+            case "positive":
+                return 3;
+            case "neutral":
+                return 2;
+            case "negative":
+                return 1;
+            case "very negative":
+                return 0;
+            default:
+                return 2;
+        }
+    }
+
+
+   /* private static int sentimentToScore(String sentiment) {
         switch (sentiment) {
             case "Very Positive":
                 return 4;
@@ -51,9 +70,9 @@ public class SentimentAnalyzer {
             default:
                 return 2;
         }
-    }
+    }*/
 
-    private static double sentimentToRating(double sentimentScore) {
+  /*  private static double sentimentToRating(double sentimentScore) {
         if (sentimentScore >= 3.5) {
             return 5.0;
         } else if (sentimentScore >= 2.5) {
@@ -65,6 +84,6 @@ public class SentimentAnalyzer {
         } else {
             return 1.0;
         }
-    }
+    }*/
 }
 

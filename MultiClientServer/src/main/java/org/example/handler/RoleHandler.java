@@ -1,6 +1,6 @@
 package org.example.handler;
 
-import org.example.model.MessageType;
+import org.example.DTO.MessageType;
 
 import java.io.BufferedReader;
 import java.io.IOException;

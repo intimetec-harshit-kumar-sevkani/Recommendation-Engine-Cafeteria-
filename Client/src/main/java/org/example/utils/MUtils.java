@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 
-public class MessageUtils {
+public class MUtils {
 
     public static <T> void sendMessage(PrintWriter out, Gson gson, T message) {
         String json = gson.toJson(message);

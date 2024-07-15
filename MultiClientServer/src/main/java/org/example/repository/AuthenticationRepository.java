@@ -18,11 +18,10 @@ public class AuthenticationRepository {
         this.connection = SQLDataSourceConfig.getConnection();
     }
 
-    public User findUserByEmailAndName(String email, String name) throws SQLException {
+    public User findUserByEmail(String email) throws SQLException {
         User user = null;
-        try (PreparedStatement statement = connection.prepareStatement(SQLQueries.FIND_USER_BY_EMAIL_AND_NAME)) {
+        try (PreparedStatement statement = connection.prepareStatement(SQLQueries.FIND_USER_BY_EMAIL)) {
             statement.setString(1, email);
-            statement.setString(2, name);
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -38,7 +37,6 @@ public class AuthenticationRepository {
 
         return user;
     }
-
     public Role findRoleById(int roleId) throws SQLException {
         Role role = null;
         try (PreparedStatement statement = connection.prepareStatement(SQLQueries.FIND_ROLE_BY_ID)) {

@@ -2,7 +2,6 @@ package org.example.models;
 
 public class RoleMessageDTO {
     public String role;
-
     public int userId;
 
     public RoleMessageDTO(String role, int userId) {

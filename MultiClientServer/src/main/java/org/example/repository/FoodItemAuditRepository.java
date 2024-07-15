@@ -18,7 +18,7 @@ public class FoodItemAuditRepository {
         try (PreparedStatement stmt = connection.prepareStatement(SQLQueries.INSERT_FOOD_AUDIT)) {
             stmt.setInt(1, foodItemId);
             stmt.setDouble(2, 3.0);
-            stmt.setInt(3, 0);
+            stmt.setInt(3, 1);
             stmt.setDouble(4, 3.0);
             stmt.setInt(5, 0);
             stmt.executeUpdate();

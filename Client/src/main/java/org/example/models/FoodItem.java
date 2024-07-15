@@ -16,16 +16,6 @@ public class FoodItem {
     private boolean sweetTooth;
     public FoodItem() {
     }
-
-   /* public FoodItem(int id, int mealTypeId, String name, BigDecimal price, boolean isAvailable, boolean isDelete) {
-        this.id = id;
-        this.mealTypeId = mealTypeId;
-        this.name = name;
-        this.price = price;
-        this.isAvailable = isAvailable;
-        this.isDelete = isDelete;
-    }*/
-
     public FoodItem(int id, int mealTypeId, String name, BigDecimal price, boolean isAvailable, boolean isDelete, String foodType, String spiceLevel, String originality, boolean sweetTooth) {
         this.id = id;
         this.mealTypeId = mealTypeId;
@@ -50,14 +40,6 @@ public class FoodItem {
         this.originality = originality;
         this.sweetTooth = sweetTooth;
     }
-
-   /* public FoodItem(int mealTypeId, String name, BigDecimal price, boolean isAvailable, boolean isDelete) {
-        this.mealTypeId = mealTypeId;
-        this.name = name;
-        this.price = price;
-        this.isAvailable = isAvailable;
-        this.isDelete = isDelete;
-    }*/
 
     public int getId() {
         return id;

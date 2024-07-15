@@ -1,7 +1,7 @@
 package org.example.service;
 
 import org.example.model.Role;
-import org.example.model.RoleMessageDTO;
+import org.example.DTO.RoleDTO;
 import org.example.model.User;
 import org.example.repository.AuthenticationRepository;
 
@@ -14,15 +14,15 @@ public class AuthenticationService {
         this.repository = new AuthenticationRepository();
     }
 
-    public RoleMessageDTO authenticate(String email, String name) throws SQLException {
-        User user = repository.findUserByEmailAndName(email, name);
+    public RoleDTO authenticate(String email) throws SQLException {
+        User user = repository.findUserByEmail(email);
         if (user != null) {
             Role role = repository.findRoleById(user.getRoleId());
             if (role != null) {
-                RoleMessageDTO roleMessageDTO = new RoleMessageDTO();
-                roleMessageDTO.setRole(role.getType());
-                roleMessageDTO.setUserId(user.getId());
-                return roleMessageDTO;
+                RoleDTO roleDTO = new RoleDTO();
+                roleDTO.setRole(role.getType());
+                roleDTO.setUserId(user.getId());
+                return roleDTO;
             }
         }
         return null;

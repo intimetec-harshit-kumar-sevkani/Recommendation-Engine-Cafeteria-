@@ -20,27 +20,27 @@ public class FoodItemController {
         this.notificationService = new NotificationService();
     }
 
-    public String addFoodItem(FoodItem newFoodItem) {
+    public String addFoodItem(FoodItem foodItem) {
         try {
-            foodItemService.addFoodItem(newFoodItem);
+            foodItemService.addFoodItem(foodItem);
             return "Food item added successfully.";
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
     }
 
-    public String updateFoodItem(FoodItem updatedFoodItem) {
+    public String updateFoodItem(FoodItem foodItem) {
         try {
-            foodItemService.updateFoodItem(updatedFoodItem);
+            foodItemService.updateFoodItem(foodItem);
             return "Food item updated successfully.";
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
     }
 
-    public String deleteFoodItem(int idToDelete) {
+    public String deleteFoodItem(int foodItemId) {
         try {
-            foodItemService.deleteFoodItem(idToDelete);
+            foodItemService.deleteFoodItem(foodItemId);
             return "Food item deleted successfully.";
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
@@ -55,11 +55,10 @@ public class FoodItemController {
             return "Error: " + e.getMessage();
         }
     }
-    public String getNotification()  {
+    public String getNotifications()  {
         try {
-            List<Notification> notifications = notificationService.getNotification();
-            String notificationJson = gson.toJson(notifications);
-            return notificationJson;
+            List<Notification> notifications = notificationService.getNotifications();
+            return gson.toJson(notifications);
         }
         catch (SQLException e) {
             return "Error: " + e.getMessage();

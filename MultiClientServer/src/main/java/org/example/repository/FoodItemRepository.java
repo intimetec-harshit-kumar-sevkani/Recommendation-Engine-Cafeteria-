@@ -131,6 +131,10 @@ public class FoodItemRepository {
                     foodItem.setPrice(rs.getBigDecimal("Price"));
                     foodItem.setAvailable(rs.getBoolean("IsAvailable"));
                     foodItem.setDelete(rs.getBoolean("IsDelete"));
+                    foodItem.setFoodType(rs.getString("FoodType"));
+                    foodItem.setSpiceLevel(rs.getString("SpiceLevel"));
+                    foodItem.setOriginality(rs.getString("Originality"));
+                    foodItem.setSweetTooth(rs.getBoolean("SweetTooth"));
                     foodItems.add(foodItem);
                 }
             }
@@ -154,6 +158,7 @@ public class FoodItemRepository {
         }
 
         if (foodItemIds.isEmpty()) {
+            foodItemIds = getNewDiscardedFoodItems();
             insertDiscardedItems(foodItemIds);
         }
 
@@ -181,6 +186,17 @@ public class FoodItemRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Integer> getNewDiscardedFoodItems() throws SQLException {
+        List<Integer> foodItemIds = new ArrayList<>();
+        try (PreparedStatement pstmt = connection.prepareStatement(SQLQueries.FETCH_DISCARDED_ITEMS);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                foodItemIds.add(rs.getInt("FoodItemId"));
+            }
+        }
+        return foodItemIds;
     }
 }
 

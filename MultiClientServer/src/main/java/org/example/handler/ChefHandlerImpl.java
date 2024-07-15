@@ -6,8 +6,8 @@ import org.example.controller.ChefController;
 import org.example.controller.FoodItemController;
 import org.example.controller.NotificationController;
 import org.example.model.FoodItem;
-import org.example.model.MessageType;
-import org.example.model.RecommendedDTO;
+import org.example.DTO.MessageType;
+import org.example.DTO.RecommendedDTO;
 import org.example.util.MessageProcessor;
 
 import java.io.BufferedReader;
@@ -106,13 +106,13 @@ public class ChefHandlerImpl implements ChefHandler, RoleHandler{
     }
 
     public void handleNotifications(BufferedReader in, PrintWriter out) {
-        String notificationJson = chefController.getNotification();
+        String notificationJson = chefController.getNotifications();
         messageProcessor.sendMessage(out, notificationJson);
     }
 
     public void handleDiscardMenuItems(BufferedReader in, PrintWriter out) throws IOException {
-        String discardItemJson = chefController.ViewDiscardItem();
-        messageProcessor.sendMessage(out, discardItemJson);
+        // String discardItemJson = chefController.viewDiscardedItems();
+        messageProcessor.sendMessage(out, chefController.viewDiscardedItems());
 
         MessageProcessor.MessageWrapper<String> responseWrapper = messageProcessor.processMessage(in, String.class);
         String response = responseWrapper.getMessage();
@@ -121,14 +121,15 @@ public class ChefHandlerImpl implements ChefHandler, RoleHandler{
             MessageProcessor.MessageWrapper<List<Integer>> foodItemIdsWrapper = messageProcessor.processMessage(in, new TypeToken<List<Integer>>() {}.getType());
             List<Integer> foodItemIds = foodItemIdsWrapper.getMessage();
 
-            String discardResponse = chefController.DiscardItem(foodItemIds);
-            messageProcessor.sendMessage(out, discardResponse);
-        } else if ("Send_Notification".equals(response)) {
+            // String discardResponse = chefController.discardItems(foodItemIds);
+            messageProcessor.sendMessage(out, chefController.discardItems(foodItemIds));
+        }
+        if ("Send_Notification".equals(response)) {
             MessageProcessor.MessageWrapper<List<FoodItem>> foodItemsWrapper = messageProcessor.processMessage(in, new TypeToken<List<FoodItem>>() {}.getType());
             List<FoodItem> foodItems = foodItemsWrapper.getMessage();
 
-            String notificationResponse = notificationController.sendNotification(foodItems);
-            messageProcessor.sendMessage(out, notificationResponse);
+            // String notificationResponse = notificationController.sendNotifications(foodItems);
+            messageProcessor.sendMessage(out, notificationController.sendNotifications(foodItems));
         }
     }
 }

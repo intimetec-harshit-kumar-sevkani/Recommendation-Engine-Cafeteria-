@@ -2,9 +2,11 @@ package org.example.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.example.controller.ChefController;
 import org.example.controller.FoodItemController;
+import org.example.controller.NotificationController;
 import org.example.model.FoodItem;
-import org.example.model.MessageType;
+import org.example.DTO.MessageType;
 import org.example.util.MessageProcessor;
 
 import java.io.BufferedReader;
@@ -18,10 +20,14 @@ import java.util.stream.Collectors;
 public class AdminHandlerImpl implements AdminHandler, RoleHandler{
 
     private FoodItemController foodItemController;
+    private NotificationController notificationController;
+    private ChefController chefController;
     private final MessageProcessor messageProcessor;
 
     public AdminHandlerImpl() throws SQLException {
         this.foodItemController = new FoodItemController();
+        this.chefController = new ChefController();
+        this.notificationController = new NotificationController();
         this.messageProcessor = new MessageProcessor(gson);
     }
 
@@ -45,6 +51,9 @@ public class AdminHandlerImpl implements AdminHandler, RoleHandler{
             case "VIEW_NOTIFICATION":
                 handleNotifications(in, out);
                 break;
+            case "VIEW_DISCARD_ITEMS":
+                handleDiscardMenuItems(in, out);
+                break;
             default:
                 System.out.println("--------------");
         }
@@ -61,8 +70,8 @@ public class AdminHandlerImpl implements AdminHandler, RoleHandler{
         MessageProcessor.MessageWrapper<FoodItem> wrapper = messageProcessor.processMessage(in, FoodItem.class);
         FoodItem updatedFoodItem = wrapper.getMessage();
 
-        String foodItemsJson = foodItemController.getAllFoodItems();
-        List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
+      //  String foodItemsJson = foodItemController.getAllFoodItems();
+        List<FoodItem> foodItems = gson.fromJson(foodItemController.getAllFoodItems(), new TypeToken<List<FoodItem>>() {}.getType());
 
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
@@ -79,8 +88,8 @@ public class AdminHandlerImpl implements AdminHandler, RoleHandler{
         MessageProcessor.MessageWrapper<Integer> wrapper = messageProcessor.processMessage(in, Integer.class);
         int id = wrapper.getMessage();
 
-        String foodItemsJson = foodItemController.getAllFoodItems();
-        List<FoodItem> foodItems = gson.fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
+       // String foodItemsJson = foodItemController.getAllFoodItems();
+        List<FoodItem> foodItems = gson.fromJson(foodItemController.getAllFoodItems(), new TypeToken<List<FoodItem>>() {}.getType());
 
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
 
@@ -94,13 +103,36 @@ public class AdminHandlerImpl implements AdminHandler, RoleHandler{
     }
 
     public void handleViewAllFoodItems(PrintWriter out) throws IOException {
-        String foodItemsJson = foodItemController.getAllFoodItems();
-        out.println(foodItemsJson);
+        String foodItems = foodItemController.getAllFoodItems();
+        out.println(foodItems);
     }
 
     public void handleNotifications(BufferedReader in, PrintWriter out) throws IOException {
-        String notificationJson = foodItemController.getNotification();
-        messageProcessor.sendMessage(out, notificationJson);
+        String notifications = foodItemController.getNotifications();
+        messageProcessor.sendMessage(out, notifications);
+    }
+
+    public void handleDiscardMenuItems(BufferedReader in, PrintWriter out) throws IOException {
+       // String discardItemJson = chefController.viewDiscardedItems();
+        messageProcessor.sendMessage(out, chefController.viewDiscardedItems());
+
+        MessageProcessor.MessageWrapper<String> responseWrapper = messageProcessor.processMessage(in, String.class);
+        String response = responseWrapper.getMessage();
+
+        if ("Discard_Food_Items".equals(response)) {
+            MessageProcessor.MessageWrapper<List<Integer>> foodItemIdsWrapper = messageProcessor.processMessage(in, new TypeToken<List<Integer>>() {}.getType());
+            List<Integer> foodItemIds = foodItemIdsWrapper.getMessage();
+
+           // String discardResponse = chefController.discardItems(foodItemIds);
+            messageProcessor.sendMessage(out, chefController.discardItems(foodItemIds));
+        }
+        if ("Send_Notification".equals(response)) {
+            MessageProcessor.MessageWrapper<List<FoodItem>> foodItemsWrapper = messageProcessor.processMessage(in, new TypeToken<List<FoodItem>>() {}.getType());
+            List<FoodItem> foodItems = foodItemsWrapper.getMessage();
+
+           // String notificationResponse = notificationController.sendNotifications(foodItems);
+            messageProcessor.sendMessage(out, notificationController.sendNotifications(foodItems));
+        }
     }
 
 }

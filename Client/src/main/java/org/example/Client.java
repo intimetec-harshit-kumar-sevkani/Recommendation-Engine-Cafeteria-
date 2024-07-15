@@ -6,7 +6,7 @@ import org.example.handlers.RoleHandlerFactory;
 import org.example.models.LoginMessage;
 import org.example.models.MessageType;
 import org.example.models.RoleMessageDTO;
-import org.example.utils.ClientUtil;
+import org.example.utils.MessageUtil;
 import org.example.utils.MenuUtils;
 
 import java.io.*;
@@ -24,9 +24,12 @@ public class Client {
     }
 
     public void start() {
+        boolean serverConnected = false;
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
              PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+
+            serverConnected = true;
 
             Scanner scanner = new Scanner(System.in);
             Gson gson = new Gson();
@@ -81,19 +84,22 @@ public class Client {
             }
 
         } catch (Exception ex) {
-            System.out.println("Client exception: " + ex.getMessage());
-            ex.printStackTrace();
+            if (!serverConnected) {
+                System.out.println("Could not connect to the server. Please ensure the server is running and try again.");
+            }
+            else {
+                System.out.println("Client exception: " + ex.getMessage());
+                ex.printStackTrace();
+            }
         }
     }
 
     private LoginResult performLogin(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , InetAddress ip) throws IOException {
-        ClientUtil.sendMessage(out,gson,new MessageType("LOGIN"),ip);
+        MessageUtil.sendMessage(out,gson,new MessageType("LOGIN"),ip);
         System.out.println("Enter your email:");
         String email = scanner.nextLine();
-        System.out.println("Enter your name:");
-        String name = scanner.nextLine();
-        ClientUtil.sendMessage(out,gson,new LoginMessage(email, name),ip);
-        RoleMessageDTO roleMessageDTO = ClientUtil.receiveMessage(in, gson, RoleMessageDTO.class);
+        MessageUtil.sendMessage(out,gson,new LoginMessage(email),ip);
+        RoleMessageDTO roleMessageDTO = MessageUtil.receiveMessage(in, gson, RoleMessageDTO.class);
 
         if (roleMessageDTO != null) {
             return new LoginResult(roleMessageDTO.getRole(), roleMessageDTO.getUserId());

@@ -2,8 +2,8 @@ package org.example.controller;
 
 import org.example.model.FoodItem;
 import org.example.model.Notification;
-import org.example.model.RecommendedDTO;
-import org.example.model.RollOutFoodItemsDTO;
+import org.example.DTO.RecommendedDTO;
+import org.example.DTO.RollOutFoodItemsDTO;
 import org.example.service.FoodItemService;
 import org.example.service.NotificationService;
 import org.example.service.RecommendationService;
@@ -16,13 +16,9 @@ import static org.example.util.JsonUtil.gson;
 
 public class ChefController {
     private RecommendationService recommendationService;
-
     private FoodItemService foodItemService;
-
     private VotedItemService votedItemService;
-
     private NotificationService notificationService;
-
     public ChefController() throws SQLException {
         this.recommendationService = new RecommendationService();
         this.votedItemService = new VotedItemService();
@@ -42,46 +38,43 @@ public class ChefController {
     public String getVotedItems(String mealType)  {
         try {
             List<RollOutFoodItemsDTO> foodItems = votedItemService.viewVotedFoodItem(mealType);
-            String foodItemJson = gson.toJson(foodItems);
-            return foodItemJson;
+            return gson.toJson(foodItems);
         }
         catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
     }
 
-    public String rollOutFoodItems(List<Integer> FoodItems) {
+    public String rollOutFoodItems(List<Integer> foodItemIds) {
         try {
-            votedItemService.rollOutFoodItems(FoodItems);
-            notificationService.sendNotification(FoodItems,"RollOut Menu");
+            votedItemService.rollOutFoodItems(foodItemIds);
+            notificationService.sendNotification(foodItemIds,"RollOut Menu");
             return "Food item Roll Out successfully.";
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
     }
-    public String getNotification() {
+    public String getNotifications() {
         try {
-            List<Notification> notifications = notificationService.getNotification();
-            String notificationJson = gson.toJson(notifications);
-            return notificationJson;
+            List<Notification> notifications = notificationService.getNotifications();
+            return gson.toJson(notifications);
         }
         catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
     }
 
-    public String ViewDiscardItem() {
+    public String viewDiscardedItems() {
         try {
             List<FoodItem> foodItems = recommendationService.getDiscardedFoodItems();
-            String discardItemJson = gson.toJson(foodItems);
-            return discardItemJson;
+            return gson.toJson(foodItems);
         }
         catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
     }
 
-    public String DiscardItem(List<Integer> foodItemIds) {
+    public String discardItems(List<Integer> foodItemIds) {
         try {
             foodItemService.discardFoodItem(foodItemIds);
            return "Food items discarded successfully";

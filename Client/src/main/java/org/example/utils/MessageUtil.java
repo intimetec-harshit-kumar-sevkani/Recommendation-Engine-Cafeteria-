@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.net.InetAddress;
 
-public class ClientUtil {
+public class MessageUtil {
 
         private static class MessageWrapper<T> {
             private InetAddress ipAddress;

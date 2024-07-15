@@ -19,7 +19,7 @@ public class NotificationService {
         notificationRepository.sendNotification(foodItemIds,notificationType);
     }
 
-    public List<Notification> getNotification() throws SQLException {
+    public List<Notification> getNotifications() throws SQLException {
         return notificationRepository.getValidNotifications();
     }
 

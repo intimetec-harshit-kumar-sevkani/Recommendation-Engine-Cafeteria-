@@ -32,9 +32,9 @@ public class EmployeeController {
         this.employeeService = new EmployeeService();
     }
 
-    public String voteFoodItem(List<Integer> votedFoodItems) {
+    public String voteForFoodItems(List<Integer> votedFoodItems) {
         try {
-            votedItemService.updateFoodItem(votedFoodItems);
+            votedItemService.updateFoodItems(votedFoodItems);
             return "Food item voted successfully.";
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
@@ -51,24 +51,22 @@ public class EmployeeController {
         }
     }
 
-    public String viewRollOutItem(String mealType, int userId) {
+    public String viewRollOutItems(String mealType, int userId) {
         try {
-            List<FoodItem> foodItems = votedItemService.viewFoodItem(mealType);
+            List<FoodItem> foodItems = votedItemService.viewFoodItems(mealType);
             UserProfile userProfile = employeeService.getUserProfile(userId);
             List<FoodItem> sortFoodItems = SortFoodItems.sortFoodItems(foodItems,userProfile);
-            String foodItemsJson = gson.toJson(sortFoodItems);
-            return foodItemsJson;
+            return gson.toJson(sortFoodItems);
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
 
     }
 
-    public String getNotification()  {
+    public String getNotifications()  {
         try {
-            List<Notification> notifications = notificationService.getNotification();
-            String notificationJson = gson.toJson(notifications);
-            return notificationJson;
+            List<Notification> notifications = notificationService.getNotifications();
+            return gson.toJson(notifications);
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
@@ -79,8 +77,7 @@ public class EmployeeController {
             List<FoodItem> foodItems = votedItemService.getPreparedFoodItems();
             UserProfile userProfile = employeeService.getUserProfile(userId);
             List<FoodItem> sortFoodItems = SortFoodItems.sortFoodItems(foodItems,userProfile);
-            String foodItemsJson = gson.toJson(sortFoodItems);
-            return foodItemsJson;
+            return gson.toJson(sortFoodItems);
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }
@@ -90,6 +87,15 @@ public class EmployeeController {
         try {
              employeeService.addUserProfile(userProfile);
             return "Profile Added SuccessFully";
+        } catch (SQLException e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    public String updateUserProfile(UserProfile userProfile) {
+        try {
+            employeeService.updateUserProfile(userProfile);
+            return "Profile Updated SuccessFully";
         } catch (SQLException e) {
             return "Error: " + e.getMessage();
         }

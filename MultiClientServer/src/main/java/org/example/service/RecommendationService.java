@@ -1,15 +1,15 @@
 package org.example.service;
 
 import org.example.model.FoodItem;
-import org.example.model.FoodItemRating;
-import org.example.model.RecommendedDTO;
+import org.example.DTO.FeedbackDTO;
+import org.example.DTO.RecommendedDTO;
 import org.example.repository.FeedbackRepository;
 import org.example.repository.FoodItemRepository;
 import org.example.repository.VotedItemRepository;
 import org.example.util.SentimentAnalyzer;
 
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecommendationService {
@@ -29,7 +29,7 @@ public class RecommendationService {
         return topFoodItems;
     }
 
-    public void updateRating(int foodItemId) throws SQLException {
+   /* public void updateRating(int foodItemId) throws SQLException {
         List<FoodItemRating> foodItemRatings = feedbackRepository.getFoodItemRatings(foodItemId);
 
         for (FoodItemRating foodItemRating : foodItemRatings) {
@@ -37,6 +37,15 @@ public class RecommendationService {
             double averageSentiment = SentimentAnalyzer.getAverageRating(comments);
             feedbackRepository.updateItemAudit(foodItemRating, averageSentiment);
         }
+
+    }*/
+
+    public void updateRating(int foodItemId) throws SQLException {
+        FeedbackDTO feedbackDTO = feedbackRepository.getLastFoodItemFeedback(foodItemId);
+            List<String> comments = new ArrayList<>();
+            comments.add(feedbackDTO.getLastComment());
+            double averageSentiment = SentimentAnalyzer.getAverageRating(comments);
+            feedbackRepository.updateItemAudit(feedbackDTO, averageSentiment);
 
     }
 

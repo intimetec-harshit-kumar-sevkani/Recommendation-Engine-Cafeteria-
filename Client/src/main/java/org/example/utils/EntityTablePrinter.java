@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityTablePrinter {
-
-    private static final String HEADER_COLOR = "\u001B[34m"; // Blue
-    private static final String DATA_COLOR = "\u001B[32m"; // Green
+    private static final String HEADER_COLOR = "\u001B[35m"; // Purple
+    private static final String DATA_COLOR = "\u001B[36m"; // Cyan
     private static final String RESET_COLOR = "\u001B[0m"; // Reset
-
     public static void printEntitiesAsTable(List<?> entities) {
         if (entities == null || entities.isEmpty()) {
             System.out.println("No data available.");
@@ -30,7 +28,20 @@ public class EntityTablePrinter {
             for (Field field : fields) {
                 field.setAccessible(true);
                 try {
-                    row.add(field.get(entity).toString());
+                    Object value = field.get(entity);
+                    if ("mealTypeId".equals(field.getName())) {
+                        if (value instanceof Integer) {
+                            value = TypeUtil.getMealTypeName((Integer) value);
+                        }
+                    }
+
+                    if ("notificationTypeId".equals(field.getName())) {
+                        if (value instanceof Integer) {
+                            value = TypeUtil.getNotificationTypeName((Integer) value);
+                        }
+                    }
+
+                    row.add(value != null ? value.toString() : "N/A");
                 } catch (IllegalAccessException e) {
                     row.add("N/A");
                 }
@@ -55,4 +66,5 @@ public class EntityTablePrinter {
             System.out.println(RESET_COLOR);
         }
     }
+
 }

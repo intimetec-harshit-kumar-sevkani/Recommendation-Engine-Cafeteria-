@@ -16,7 +16,7 @@ public class UserProfileRepository {
         this.connection = SQLDataSourceConfig.getConnection();
     }
 
-    public void insertUserProfile(UserProfile userProfile) throws SQLException {
+    public void addUserProfile(UserProfile userProfile) throws SQLException {
         try (PreparedStatement stmt = connection.prepareStatement(SQLQueries.INSERT_USER_PROFILE)) {
             stmt.setInt(1, userProfile.getUserId());
             stmt.setString(2, userProfile.getFoodType());
@@ -25,6 +25,18 @@ public class UserProfileRepository {
             stmt.setBoolean(5, userProfile.isSweetTooth());
 
             int rowsInserted = stmt.executeUpdate();
+        }
+    }
+
+    public void updateUserProfile(UserProfile userProfile) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(SQLQueries.UPDATE_USER_PROFILE)) {
+            stmt.setString(1, userProfile.getFoodType());
+            stmt.setString(2, userProfile.getSpiceLevel());
+            stmt.setString(3, userProfile.getOriginality());
+            stmt.setBoolean(4, userProfile.isSweetTooth());
+            stmt.setInt(5, userProfile.getUserId());
+
+            int rowsUpdated = stmt.executeUpdate();
         }
     }
 

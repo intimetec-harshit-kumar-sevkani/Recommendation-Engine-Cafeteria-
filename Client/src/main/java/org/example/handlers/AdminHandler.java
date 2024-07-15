@@ -2,6 +2,7 @@ package org.example.handlers;
 
 import com.google.gson.Gson;
 import org.example.services.AdminService;
+import org.example.services.ChefService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +28,9 @@ public class AdminHandler implements RoleHandler{
                 return false;
             case "5":
                 AdminService.handleViewNotification(out, in , gson,ip);
+                return false;
+            case "6" :
+                AdminService.handleDiscardMenuItems(out, in, gson, ip);
                 return false;
             case "7":
                 System.out.println("Exiting...");

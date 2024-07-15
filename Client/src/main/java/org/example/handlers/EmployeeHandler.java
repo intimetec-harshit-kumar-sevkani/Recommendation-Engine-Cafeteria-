@@ -29,9 +29,12 @@ public class EmployeeHandler implements RoleHandler {
                 EmployeeService.handleTodayMenuItems(out, in, gson,userId, ip);
                 return false;
             case "6" :
-                EmployeeService.handleUserProfile(scanner,out, in, gson, userId, ip);
+                EmployeeService.handleAddUserProfile(scanner,out, in, gson, userId, ip);
                 return false;
-            case "7":
+            case "7" :
+                EmployeeService.handleUpdateUserProfile(scanner,out, in, gson, userId, ip);
+                return false;
+            case "8":
                 System.out.println("Exiting...");
                 return true;
             default:

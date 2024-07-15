@@ -1,16 +1,15 @@
-package org.example.model;
+package org.example.DTO;
 
-public class RoleMessageDTO {
+public class RoleDTO {
     public String role;
-
     public int userId;
 
-    public RoleMessageDTO(String role, int userId) {
+    public RoleDTO(String role, int userId) {
         this.role = role;
         this.userId = userId;
     }
 
-    public RoleMessageDTO() {
+    public RoleDTO() {
     }
 
     public String getRole() {

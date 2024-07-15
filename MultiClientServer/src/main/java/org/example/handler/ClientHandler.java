@@ -2,9 +2,9 @@ package org.example.handler;
 
 import com.google.gson.Gson;
 import org.example.controller.AuthenticationController;
-import org.example.model.LoginMessage;
-import org.example.model.MessageType;
-import org.example.model.RoleMessageDTO;
+import org.example.DTO.LoginDTO;
+import org.example.DTO.MessageType;
+import org.example.DTO.RoleDTO;
 import org.example.server.MultiClientServer;
 import org.example.util.MessageProcessor;
 
@@ -75,13 +75,13 @@ public class ClientHandler implements Runnable {
     private String handleLogin(BufferedReader in, PrintWriter out) throws Exception {
         MessageProcessor messageProcessor = new MessageProcessor(new Gson());
         try {
-            MessageProcessor.MessageWrapper<LoginMessage> loginMessageWrapper = messageProcessor.processMessage(in, LoginMessage.class);
-            LoginMessage loginMessage = loginMessageWrapper.getMessage();
-            System.out.println("Received login info: " + loginMessage.getEmail());
-            RoleMessageDTO roleMessageDTO = authController.login(loginMessage.getEmail(), loginMessage.getName());
-            String json = gson.toJson(roleMessageDTO);
+            MessageProcessor.MessageWrapper<LoginDTO> loginMessageWrapper = messageProcessor.processMessage(in, LoginDTO.class);
+            LoginDTO loginDTO = loginMessageWrapper.getMessage();
+            System.out.println("Received login info: " + loginDTO.getEmail());
+            RoleDTO roleDTO = authController.login(loginDTO.getEmail());
+            String json = gson.toJson(roleDTO);
             messageProcessor.sendMessage(out, json);
-            return roleMessageDTO.getRole();
+            return roleDTO.getRole();
         } catch (Exception ex) {
             messageProcessor.sendMessage(out, "Error: " + ex.getMessage());
             return null;

@@ -1,7 +1,7 @@
 package org.example.service;
 
 import org.example.model.FoodItem;
-import org.example.model.RollOutFoodItemsDTO;
+import org.example.DTO.RollOutFoodItemsDTO;
 import org.example.repository.VotedItemRepository;
 
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ public class VotedItemService {
         this.votedItemRepository = new VotedItemRepository();
     }
 
-    public void updateFoodItem(List<Integer> votedItemIds) throws SQLException {
+    public void updateFoodItems(List<Integer> votedItemIds) throws SQLException {
         votedItemRepository.voteFoodItems(votedItemIds);
     }
 
@@ -28,7 +28,7 @@ public class VotedItemService {
         return rollOutFoodItemsDTOList;
     }
 
-    public List<FoodItem> viewFoodItem(String mealType) throws SQLException {
+    public List<FoodItem> viewFoodItems(String mealType) throws SQLException {
         List<FoodItem>foodItems = votedItemRepository.getFoodItemsForVote(mealType);
         return foodItems;
     }

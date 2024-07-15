@@ -14,7 +14,11 @@ public class EmployeeService {
     }
 
     public void addUserProfile(UserProfile userProfile) throws SQLException {
-        userProfileRepository.insertUserProfile(userProfile);
+        userProfileRepository.addUserProfile(userProfile);
+    }
+
+    public void updateUserProfile(UserProfile userProfile) throws SQLException {
+        userProfileRepository.updateUserProfile(userProfile);
     }
 
     public UserProfile getUserProfile(int userId) throws SQLException {

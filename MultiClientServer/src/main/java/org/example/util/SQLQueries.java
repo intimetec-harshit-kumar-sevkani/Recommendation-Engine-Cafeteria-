@@ -4,6 +4,7 @@ public class SQLQueries {
     public static final String INSERT_VOTED_ITEM = "INSERT INTO voted_item (FoodItemId, Vote, Date, IsPrepared, IsDelete) VALUES (?, 0, NOW(), false, false)";
     public static final String UPDATE_VOTE = "UPDATE voted_item SET Vote = Vote + 1 WHERE FoodItemId = ? AND DATE(Date) = CURDATE()";
     public static final String MARK_AS_PREPARED = "UPDATE voted_item SET IsPrepared = true WHERE FoodItemId = ?";
+    public static final String INCREMENT_PREPARED_COUNT = "UPDATE food_item_audit SET Prepared = Prepared + 1 WHERE FoodItemId = ?";
     public static final String GET_MEAL_TYPE_ID = "SELECT Id FROM meal_type WHERE Type = ? AND IsDelete = 0";
     public static final String GET_FOOD_ITEMS_FOR_VOTE = "SELECT fi.* FROM food_item fi JOIN voted_item vi ON fi.Id = vi.FoodItemId WHERE DATE(vi.Date) = CURDATE() AND fi.MealTypeId = ?";
     public static final String GET_ROLL_OUT_ITEMS = "SELECT fi.Id, fi.MealTypeId, fi.Name, fi.Price, fi.IsAvailable, fi.IsDelete, vi.Vote FROM food_item fi JOIN voted_item vi ON fi.Id = vi.FoodItemId WHERE DATE(vi.Date) = CURDATE() AND fi.MealTypeId = ?";
@@ -12,15 +13,22 @@ public class SQLQueries {
 
     // Queries for AuthenticationRepository
     public static final String FIND_USER_BY_EMAIL_AND_NAME = "SELECT * FROM user WHERE Email = ? AND Name = ? AND IsDelete = FALSE";
+
+    public static final String FIND_USER_BY_EMAIL = "SELECT * FROM user WHERE Email = ? AND IsDelete = FALSE";
     public static final String FIND_ROLE_BY_ID = "SELECT * FROM role WHERE Id = ? AND IsDelete = FALSE";
 
     // Queries for FeedbackRepository
+
+    public static final String GET_LAST_FOOD_ITEM_FEEDBACK = "SELECT FoodItemId, Rating AS last_rating, Comment AS last_comment FROM feedback WHERE FoodItemId = ? ORDER BY id DESC LIMIT 1";
+
     public static final String GET_FOOD_ITEM_RATINGS = "SELECT FoodItemId, AVG(Rating) AS average_rating, GROUP_CONCAT(Comment SEPARATOR ', ') AS comments FROM feedback WHERE Date = CURDATE() AND FoodItemId = ? GROUP BY FoodItemId";
     public static final String UPDATE_ITEM_AUDIT = "UPDATE food_item_audit SET Rating = ?, Sentiment = ? WHERE FoodItemId = ?";
     public static final String ADD_FEEDBACK = "INSERT INTO feedback (FoodItemId, UserId, Rating, Comment, Date, IsDelete) VALUES (?, ?, ?, ?, CURDATE(), ?)";
 
     public static final String INSERT_USER_PROFILE = "INSERT INTO user_profile (UserId, FoodType, SpiceLevel, Originality, SweetTooth) VALUES (?, ?, ?, ?, ?)";
     public static final String SELECT_USER_PROFILE = "SELECT FoodType, SpiceLevel, Originality, SweetTooth FROM user_profile WHERE UserId = ?";
+
+    public static final String UPDATE_USER_PROFILE = "UPDATE user_profile SET FoodType = ?, SpiceLevel = ?, Originality = ?, SweetTooth = ? WHERE UserId = ?";
 
     public static final String SELECT_FOODITEM_NAME_MEALTYPEID = "SELECT Name, MealTypeId FROM food_item WHERE Id = ? AND IsDelete = 0";
     public static final String SELECT_NOTIFICATION_TYPE_ID = "SELECT Id FROM notification_type WHERE Type = ? AND IsDelete = 0";
@@ -48,6 +56,7 @@ public class SQLQueries {
     public static final String SELECT_FOOD_ITEMS_BY_IDS = "SELECT * FROM food_item WHERE Id IN (%s)";
     public static final String SELECT_DISCARDED_FOOD_ITEMS = "SELECT foodItemId FROM discard_item WHERE date >= ?";
     public static final String INSERT_DISCARDED_ITEMS = "INSERT INTO discard_item (foodItemId, date) VALUES (?, ?)";
+    public static final String FETCH_DISCARDED_ITEMS = "SELECT FoodItemId FROM food_item_audit WHERE Rating <= 2 OR Sentiment <= 2";
     public static final String DELETE_FOOD_ITEMS = "DELETE FROM food_item WHERE Id = ?";
 }
 
