@@ -44,29 +44,17 @@ public class VotedItemRepository {
         }
     }
 
-   /* public void markFoodItemsAsPrepared(List<Integer> foodItemIds) throws SQLException {
-        try (PreparedStatement stmt = connection.prepareStatement(SQLQueries.MARK_AS_PREPARED)) {
-            for (int foodItemId : foodItemIds) {
-                stmt.setInt(1, foodItemId);
-                stmt.addBatch();
-            }
-            stmt.executeBatch();
-        }
-    }*/
-
     public void markFoodItemsAsPrepared(List<Integer> foodItemIds) throws SQLException {
 
             try (PreparedStatement markPreparedStmt = connection.prepareStatement(SQLQueries.MARK_AS_PREPARED);
                  PreparedStatement incrementPreparedStmt = connection.prepareStatement(SQLQueries.INCREMENT_PREPARED_COUNT)) {
 
-                // Mark food items as prepared
                 for (int foodItemId : foodItemIds) {
                     markPreparedStmt.setInt(1, foodItemId);
                     markPreparedStmt.addBatch();
                 }
                 markPreparedStmt.executeBatch();
 
-                // Increment the prepared count
                 for (int foodItemId : foodItemIds) {
                     incrementPreparedStmt.setInt(1, foodItemId);
                     incrementPreparedStmt.addBatch();

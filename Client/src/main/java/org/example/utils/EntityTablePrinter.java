@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityTablePrinter {
-    private static final String HEADER_COLOR = "\u001B[35m"; // Purple
-    private static final String DATA_COLOR = "\u001B[36m"; // Cyan
-    private static final String RESET_COLOR = "\u001B[0m"; // Reset
+    private static final String HEADER_COLOR = "\u001B[35m";
+    private static final String DATA_COLOR = "\u001B[36m";
+    private static final String RESET_COLOR = "\u001B[0m";
     public static void printEntitiesAsTable(List<?> entities) {
         if (entities == null || entities.isEmpty()) {
             System.out.println("No data available.");

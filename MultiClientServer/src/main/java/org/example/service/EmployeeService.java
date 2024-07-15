@@ -2,7 +2,6 @@ package org.example.service;
 
 import org.example.model.UserProfile;
 import org.example.repository.UserProfileRepository;
-
 import java.sql.SQLException;
 
 public class EmployeeService {

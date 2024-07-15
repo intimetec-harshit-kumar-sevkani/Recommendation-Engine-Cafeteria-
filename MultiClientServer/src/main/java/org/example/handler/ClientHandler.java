@@ -79,8 +79,8 @@ public class ClientHandler implements Runnable {
             LoginDTO loginDTO = loginMessageWrapper.getMessage();
             System.out.println("Received login info: " + loginDTO.getEmail());
             RoleDTO roleDTO = authController.login(loginDTO.getEmail());
-            String json = gson.toJson(roleDTO);
-            messageProcessor.sendMessage(out, json);
+            String role = gson.toJson(roleDTO);
+            messageProcessor.sendMessage(out, role);
             return roleDTO.getRole();
         } catch (Exception ex) {
             messageProcessor.sendMessage(out, "Error: " + ex.getMessage());

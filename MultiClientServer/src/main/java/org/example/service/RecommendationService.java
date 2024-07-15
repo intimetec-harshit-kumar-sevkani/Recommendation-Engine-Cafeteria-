@@ -29,17 +29,6 @@ public class RecommendationService {
         return topFoodItems;
     }
 
-   /* public void updateRating(int foodItemId) throws SQLException {
-        List<FoodItemRating> foodItemRatings = feedbackRepository.getFoodItemRatings(foodItemId);
-
-        for (FoodItemRating foodItemRating : foodItemRatings) {
-            List<String> comments = Arrays.asList(foodItemRating.getComments().split(", "));
-            double averageSentiment = SentimentAnalyzer.getAverageRating(comments);
-            feedbackRepository.updateItemAudit(foodItemRating, averageSentiment);
-        }
-
-    }*/
-
     public void updateRating(int foodItemId) throws SQLException {
         FeedbackDTO feedbackDTO = feedbackRepository.getLastFoodItemFeedback(foodItemId);
             List<String> comments = new ArrayList<>();

@@ -62,7 +62,6 @@ public class ChefHandlerImpl implements ChefHandler, RoleHandler{
     public void handleRecommendationFoodItems(BufferedReader in, PrintWriter out) throws IOException {
         MessageProcessor.MessageWrapper<RecommendedDTO> wrapper = messageProcessor.processMessage(in, RecommendedDTO.class);
         RecommendedDTO recommendedDTO = wrapper.getMessage();
-
         if ("Invalid Meal Type".equals(recommendedDTO)) {
             messageProcessor.sendMessage(out, "Invalid Meal Type. Valid Meal Types are: Breakfast, Lunch, and Dinner.");
         } else {
@@ -79,23 +78,17 @@ public class ChefHandlerImpl implements ChefHandler, RoleHandler{
     public void handleRollOutItems(BufferedReader in, PrintWriter out) throws IOException {
         MessageProcessor.MessageWrapper<String> wrapper = messageProcessor.processMessage(in, String.class);
         String mealType = wrapper.getMessage();
-
         if ("Invalid Meal Type".equals(mealType)) {
             messageProcessor.sendMessage(out, "Invalid Meal Type. Valid Meal Types are: Breakfast, Lunch, and Dinner.");
         } else {
             String response = chefController.getVotedItems(mealType);
             messageProcessor.sendMessage(out, response);
-
             MessageProcessor.MessageWrapper<List<Integer>> rollOutWrapper = messageProcessor.processMessage(in, new TypeToken<List<Integer>>() {}.getType());
             List<Integer> rollOutItems = rollOutWrapper.getMessage();
-
             String foodItemsJson = foodItemController.getAllFoodItems();
             List<FoodItem> foodItems = new Gson().fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
-
             Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
-
             boolean isValid = rollOutItems.stream().allMatch(validFoodItemIds::contains);
-
             if (isValid) {
                 String rollOutResponse = chefController.rollOutFoodItems(rollOutItems);
                 messageProcessor.sendMessage(out, rollOutResponse);
@@ -111,24 +104,18 @@ public class ChefHandlerImpl implements ChefHandler, RoleHandler{
     }
 
     public void handleDiscardMenuItems(BufferedReader in, PrintWriter out) throws IOException {
-        // String discardItemJson = chefController.viewDiscardedItems();
         messageProcessor.sendMessage(out, chefController.viewDiscardedItems());
-
         MessageProcessor.MessageWrapper<String> responseWrapper = messageProcessor.processMessage(in, String.class);
         String response = responseWrapper.getMessage();
 
         if ("Discard_Food_Items".equals(response)) {
             MessageProcessor.MessageWrapper<List<Integer>> foodItemIdsWrapper = messageProcessor.processMessage(in, new TypeToken<List<Integer>>() {}.getType());
             List<Integer> foodItemIds = foodItemIdsWrapper.getMessage();
-
-            // String discardResponse = chefController.discardItems(foodItemIds);
             messageProcessor.sendMessage(out, chefController.discardItems(foodItemIds));
         }
         if ("Send_Notification".equals(response)) {
             MessageProcessor.MessageWrapper<List<FoodItem>> foodItemsWrapper = messageProcessor.processMessage(in, new TypeToken<List<FoodItem>>() {}.getType());
             List<FoodItem> foodItems = foodItemsWrapper.getMessage();
-
-            // String notificationResponse = notificationController.sendNotifications(foodItems);
             messageProcessor.sendMessage(out, notificationController.sendNotifications(foodItems));
         }
     }

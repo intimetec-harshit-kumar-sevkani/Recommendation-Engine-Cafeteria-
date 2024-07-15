@@ -34,7 +34,6 @@ public class SentimentAnalyzer {
 
         double averageSentiment = (double) totalSentiment / count;
         return averageSentiment;
-       // return sentimentToRating(averageSentiment);
     }
 
     private static int sentimentToScore(String sentiment) {
@@ -54,36 +53,5 @@ public class SentimentAnalyzer {
         }
     }
 
-
-   /* private static int sentimentToScore(String sentiment) {
-        switch (sentiment) {
-            case "Very Positive":
-                return 4;
-            case "Positive":
-                return 3;
-            case "Neutral":
-                return 2;
-            case "Negative":
-                return 1;
-            case "Very Negative":
-                return 0;
-            default:
-                return 2;
-        }
-    }*/
-
-  /*  private static double sentimentToRating(double sentimentScore) {
-        if (sentimentScore >= 3.5) {
-            return 5.0;
-        } else if (sentimentScore >= 2.5) {
-            return 4.0;
-        } else if (sentimentScore >= 1.5) {
-            return 3.0;
-        } else if (sentimentScore >= 0.5) {
-            return 2.0;
-        } else {
-            return 1.0;
-        }
-    }*/
 }
 

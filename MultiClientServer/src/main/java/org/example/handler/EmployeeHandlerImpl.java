@@ -59,19 +59,16 @@ public class EmployeeHandlerImpl implements EmployeeHandler, RoleHandler {
     }
 
     public void handleViewAllFoodItems(PrintWriter out) throws IOException {
-        String foodItemsJson = foodItemController.getAllFoodItems();
-        messageProcessor.sendMessage(out, foodItemsJson);
+        String foodItems = foodItemController.getAllFoodItems();
+        messageProcessor.sendMessage(out, foodItems);
     }
 
     public void handleFeedback(BufferedReader in, PrintWriter out) throws IOException {
         MessageProcessor.MessageWrapper<Feedback> feedbackWrapper = messageProcessor.processMessage(in, Feedback.class);
         Feedback feedback = feedbackWrapper.getMessage();
-
         String foodItemsJson = foodItemController.getAllFoodItems();
         List<FoodItem> foodItems = new Gson().fromJson(foodItemsJson, new TypeToken<List<FoodItem>>() {}.getType());
-
         Set<Integer> validFoodItemIds = foodItems.stream().map(FoodItem::getId).collect(Collectors.toSet());
-
         if (validFoodItemIds.contains(feedback.getFoodItemId())) {
             String response = employeeController.addFeedback(feedback);
             messageProcessor.sendMessage(out, response);
@@ -81,31 +78,25 @@ public class EmployeeHandlerImpl implements EmployeeHandler, RoleHandler {
     }
 
     public void handleNotifications(BufferedReader in, PrintWriter out) throws IOException {
-        String notificationJson = employeeController.getNotifications();
-        messageProcessor.sendMessage(out, notificationJson);
+        String notifications = employeeController.getNotifications();
+        messageProcessor.sendMessage(out, notifications);
     }
 
     public void handleVotedFoodItems(BufferedReader in, PrintWriter out) throws IOException {
         MessageProcessor.MessageWrapper<String> mealTypeWrapper = messageProcessor.processMessage(in, String.class);
         String mealType = mealTypeWrapper.getMessage();
-
         if ("Invalid Meal Type".equals(mealType)) {
             messageProcessor.sendMessage(out, "Invalid Meal Type. Valid Meal Types are: Breakfast, Lunch, and Dinner.");
         } else {
             MessageProcessor.MessageWrapper<Integer> userIdWrapper = messageProcessor.processMessage(in, Integer.class);
             int userId = userIdWrapper.getMessage();
-
-            String foodItemsJson = employeeController.viewRollOutItems(mealType, userId);
-            messageProcessor.sendMessage(out, foodItemsJson);
-
-            /*MessageProcessor.MessageWrapper<String> votedItemIdsWrapper = messageProcessor.processMessage(in, String.class);
-            String votedItemIdsJson = votedItemIdsWrapper.getMessage();*/
-            String votedItemIdsJson = in.readLine();
-
-            if ("No valid IDs".equals(votedItemIdsJson)) {
+            String foodItems = employeeController.viewRollOutItems(mealType, userId);
+            messageProcessor.sendMessage(out, foodItems);
+            String votedItemIds = in.readLine();
+            if ("No valid IDs".equals(votedItemIds)) {
                 messageProcessor.sendMessage(out, "No valid IDs entered.");
             } else {
-                List<Integer> votedItems = new Gson().fromJson(votedItemIdsJson, new TypeToken<List<Integer>>() {}.getType());
+                List<Integer> votedItems = new Gson().fromJson(votedItemIds, new TypeToken<List<Integer>>() {}.getType());
                 String response = employeeController.voteForFoodItems(votedItems);
                 messageProcessor.sendMessage(out, response);
             }
@@ -115,15 +106,13 @@ public class EmployeeHandlerImpl implements EmployeeHandler, RoleHandler {
     public void handleTodayMenuItems(BufferedReader in, PrintWriter out) throws IOException {
         MessageProcessor.MessageWrapper<Integer> userIdWrapper = messageProcessor.processMessage(in, Integer.class);
         int userId = userIdWrapper.getMessage();
-
-        String foodItemsJson = employeeController.viewTodayMenu(userId);
-        messageProcessor.sendMessage(out, foodItemsJson);
+        String foodItems = employeeController.viewTodayMenu(userId);
+        messageProcessor.sendMessage(out, foodItems);
     }
 
     public void handleAddUserProfile(BufferedReader in, PrintWriter out) throws IOException {
         MessageProcessor.MessageWrapper<UserProfile> userProfileWrapper = messageProcessor.processMessage(in, UserProfile.class);
         UserProfile userProfile = userProfileWrapper.getMessage();
-
         String response = employeeController.addUserProfile(userProfile);
         messageProcessor.sendMessage(out, response);
     }
@@ -131,7 +120,6 @@ public class EmployeeHandlerImpl implements EmployeeHandler, RoleHandler {
     public void handleUpdateUserProfile(BufferedReader in, PrintWriter out) throws IOException {
         MessageProcessor.MessageWrapper<UserProfile> userProfileWrapper = messageProcessor.processMessage(in, UserProfile.class);
         UserProfile userProfile = userProfileWrapper.getMessage();
-
         String response = employeeController.updateUserProfile(userProfile);
         messageProcessor.sendMessage(out, response);
     }

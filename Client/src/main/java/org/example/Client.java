@@ -3,9 +3,9 @@ package org.example;
 import com.google.gson.Gson;
 import org.example.handlers.RoleHandler;
 import org.example.handlers.RoleHandlerFactory;
-import org.example.models.LoginMessage;
-import org.example.models.MessageType;
-import org.example.models.RoleMessageDTO;
+import org.example.DTO.LoginDTO;
+import org.example.DTO.MessageDTO;
+import org.example.DTO.RoleMessageDTO;
 import org.example.utils.MessageUtil;
 import org.example.utils.MenuUtils;
 
@@ -95,10 +95,10 @@ public class Client {
     }
 
     private LoginResult performLogin(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson , InetAddress ip) throws IOException {
-        MessageUtil.sendMessage(out,gson,new MessageType("LOGIN"),ip);
+        MessageUtil.sendMessage(out,gson,new MessageDTO("LOGIN"),ip);
         System.out.println("Enter your email:");
         String email = scanner.nextLine();
-        MessageUtil.sendMessage(out,gson,new LoginMessage(email),ip);
+        MessageUtil.sendMessage(out,gson,new LoginDTO(email),ip);
         RoleMessageDTO roleMessageDTO = MessageUtil.receiveMessage(in, gson, RoleMessageDTO.class);
 
         if (roleMessageDTO != null) {

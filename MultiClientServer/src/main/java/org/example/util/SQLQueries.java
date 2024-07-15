@@ -10,19 +10,10 @@ public class SQLQueries {
     public static final String GET_ROLL_OUT_ITEMS = "SELECT fi.Id, fi.MealTypeId, fi.Name, fi.Price, fi.IsAvailable, fi.IsDelete, vi.Vote FROM food_item fi JOIN voted_item vi ON fi.Id = vi.FoodItemId WHERE DATE(vi.Date) = CURDATE() AND fi.MealTypeId = ?";
     public static final String GET_PREPARED_FOOD_ITEM_IDS = "SELECT FoodItemId FROM voted_item WHERE IsPrepared = 1 AND DATE(Date) = ?";
     public static final String GET_FOOD_ITEMS_BY_IDS_TEMPLATE = "SELECT * FROM food_item WHERE Id IN (%s) AND IsDelete = 0";
-
-    // Queries for AuthenticationRepository
-    public static final String FIND_USER_BY_EMAIL_AND_NAME = "SELECT * FROM user WHERE Email = ? AND Name = ? AND IsDelete = FALSE";
-
     public static final String FIND_USER_BY_EMAIL = "SELECT * FROM user WHERE Email = ? AND IsDelete = FALSE";
     public static final String FIND_ROLE_BY_ID = "SELECT * FROM role WHERE Id = ? AND IsDelete = FALSE";
 
-    // Queries for FeedbackRepository
-
     public static final String GET_LAST_FOOD_ITEM_FEEDBACK = "SELECT FoodItemId, Rating AS last_rating, Comment AS last_comment FROM feedback WHERE FoodItemId = ? ORDER BY id DESC LIMIT 1";
-
-    public static final String GET_FOOD_ITEM_RATINGS = "SELECT FoodItemId, AVG(Rating) AS average_rating, GROUP_CONCAT(Comment SEPARATOR ', ') AS comments FROM feedback WHERE Date = CURDATE() AND FoodItemId = ? GROUP BY FoodItemId";
-    public static final String UPDATE_ITEM_AUDIT = "UPDATE food_item_audit SET Rating = ?, Sentiment = ? WHERE FoodItemId = ?";
     public static final String ADD_FEEDBACK = "INSERT INTO feedback (FoodItemId, UserId, Rating, Comment, Date, IsDelete) VALUES (?, ?, ?, ?, CURDATE(), ?)";
 
     public static final String INSERT_USER_PROFILE = "INSERT INTO user_profile (UserId, FoodType, SpiceLevel, Originality, SweetTooth) VALUES (?, ?, ?, ?, ?)";
@@ -39,7 +30,6 @@ public class SQLQueries {
             "WHERE n.IsDelete = 0 AND nt.IsDelete = 0";
     public static final String INSERT_NOTIFICATION = "INSERT INTO notification (NotificationTypeId, Message, IsDelete, Date) VALUES (?, ?, 0, NOW())";
 
-    // FoodItemAuditRepository SQL query
     public static final String INSERT_FOOD_AUDIT = "INSERT INTO food_item_audit (FoodItemId, Rating, Vote, Sentiment, Prepared) VALUES (?, ?, ?, ?, ?)";
 
     public static final String DELETE_FOOD_ITEM = "DELETE FROM food_item WHERE Id = ?";
@@ -58,5 +48,9 @@ public class SQLQueries {
     public static final String INSERT_DISCARDED_ITEMS = "INSERT INTO discard_item (foodItemId, date) VALUES (?, ?)";
     public static final String FETCH_DISCARDED_ITEMS = "SELECT FoodItemId FROM food_item_audit WHERE Rating <= 2 OR Sentiment <= 2";
     public static final String DELETE_FOOD_ITEMS = "DELETE FROM food_item WHERE Id = ?";
+
+    public static final String SELECT_FOOD_ITEM_AUDIT = "SELECT Rating, Vote, Sentiment FROM food_item_audit WHERE FoodItemId = ?";
+    public static final String UPDATE_FOOD_ITEM_AUDIT = "UPDATE food_item_audit SET Rating = ?, Sentiment = ?, Vote = ? WHERE FoodItemId = ?";
+
 }
 

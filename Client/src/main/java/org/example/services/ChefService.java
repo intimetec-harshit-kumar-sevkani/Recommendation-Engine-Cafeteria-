@@ -2,6 +2,9 @@ package org.example.services;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.example.DTO.MessageDTO;
+import org.example.DTO.RecommendedDTO;
+import org.example.DTO.RollOutFoodItemsDTO;
 import org.example.models.*;
 import org.example.utils.MessageUtil;
 import org.example.utils.EntityTablePrinter;
@@ -14,11 +17,9 @@ import java.util.*;
 
 public class ChefService {
     public static void handleGetRecommendedItems(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, InetAddress ip) throws IOException {
-        MessageUtil.sendMessage(out, gson, new MessageType("GET_RECOMMENDED_ITEMS"),ip);
-
+        MessageUtil.sendMessage(out, gson, new MessageDTO("GET_RECOMMENDED_ITEMS"),ip);
         RecommendedDTO recommendedDTO = new RecommendedDTO();
         Set<String> validMealTypes = new HashSet<>(Arrays.asList("Breakfast", "Lunch", "Dinner"));
-
         System.out.println("Enter the Meal Type:");
         String mealType = scanner.nextLine();
         if (validMealTypes.contains(mealType)) {
@@ -37,10 +38,8 @@ public class ChefService {
     }
 
     public static void handleRollOutFoodItems(Scanner scanner, PrintWriter out, BufferedReader in, Gson gson, InetAddress ip) throws IOException {
-        MessageUtil.sendMessage(out, gson, new MessageType("GET_VOTED_ITEMS"),ip);
-
+        MessageUtil.sendMessage(out, gson, new MessageDTO("GET_VOTED_ITEMS"),ip);
         Set<String> validMealTypes = new HashSet<>(Arrays.asList("Breakfast", "Lunch", "Dinner"));
-
         System.out.println("Enter the Meal Type:");
         String mealType = scanner.nextLine();
         if (validMealTypes.contains(mealType)) {
@@ -53,35 +52,31 @@ public class ChefService {
             for (String inputId : inputIds) {
                 foodItemIds.add(Integer.parseInt(inputId.trim()));
             }
-
             MessageUtil.sendMessage(out, gson, foodItemIds,ip);
             System.out.println(MessageUtil.receiveMessage(in));
         } else {
             out.println("Invalid Meal Type");
             System.out.println(MessageUtil.receiveMessage(in));
         }
-
     }
 
     public static void handleViewAllFoodItems(PrintWriter out, BufferedReader in, Gson gson, InetAddress ip) throws IOException {
-        MessageUtil.sendMessage(out, gson, new MessageType("VIEW_ALL_FOOD_ITEMS"),ip);
+        MessageUtil.sendMessage(out, gson, new MessageDTO("VIEW_ALL_FOOD_ITEMS"),ip);
         List<FoodItem> foodItems = MessageUtil.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
         EntityTablePrinter.printEntitiesAsTable(foodItems);
     }
 
     public static void handleViewNotification(PrintWriter out, BufferedReader in, Gson gson, InetAddress ip) throws IOException {
-        MessageUtil.sendMessage(out, gson, new MessageType("VIEW_NOTIFICATION"),ip);
+        MessageUtil.sendMessage(out, gson, new MessageDTO("VIEW_NOTIFICATION"),ip);
         String notificationJson = MessageUtil.receiveMessage(in);
         List<Notification> notifications = gson.fromJson(notificationJson, new TypeToken<List<Notification>>(){}.getType());
         EntityTablePrinter.printEntitiesAsTable(notifications);
     }
 
     public static void handleDiscardMenuItems(PrintWriter out, BufferedReader in, Gson gson, InetAddress ip) throws IOException {
-        MessageUtil.sendMessage(out, gson, new MessageType("VIEW_DISCARD_ITEMS"), ip);
-
+        MessageUtil.sendMessage(out, gson, new MessageDTO("VIEW_DISCARD_ITEMS"), ip);
         List<FoodItem> foodItems = MessageUtil.receiveMessage(in, gson, new TypeToken<List<FoodItem>>() {}.getType());
         EntityTablePrinter.printEntitiesAsTable(foodItems);
-
         System.out.println("Choose an option:");
         System.out.println("1. Discard a Food Item");
         System.out.println("2. Send Notification for Feedback");
@@ -90,11 +85,9 @@ public class ChefService {
         String choice = scanner.nextLine();
         switch (choice) {
             case "1":
-                // MessageUtil.sendMessage(out, gson, "Discard_Food_Items", ip);
                 System.out.print("Enter the FoodItemIds to discard (comma-separated): ");
                 List<Integer> foodItemIds = new ArrayList<>();
                 String[] inputIds = scanner.nextLine().split(",");
-
                 boolean validIds = true;
                 for (String inputId : inputIds) {
                     int id = Integer.parseInt(inputId.trim());
@@ -113,7 +106,6 @@ public class ChefService {
                     MessageUtil.sendMessage(out, gson, foodItemIds, ip);
                     System.out.println(MessageUtil.receiveMessage(in));
                 } else {
-                    //  System.out.println("Please enter valid FoodItemIds.");
                     MessageUtil.sendMessage(out, gson, "INVALID_IDS", ip);
                 }
                 break;

@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import com.google.gson.Gson;
 import org.example.model.FoodItem;
 import org.example.model.Notification;
 import org.example.DTO.RecommendedDTO;
@@ -12,13 +13,14 @@ import org.example.service.VotedItemService;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.example.util.JsonUtil.gson;
 
 public class ChefController {
     private RecommendationService recommendationService;
     private FoodItemService foodItemService;
     private VotedItemService votedItemService;
     private NotificationService notificationService;
+
+    private Gson gson = new Gson();
     public ChefController() throws SQLException {
         this.recommendationService = new RecommendationService();
         this.votedItemService = new VotedItemService();

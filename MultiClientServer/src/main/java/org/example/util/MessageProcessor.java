@@ -35,8 +35,6 @@ public class MessageProcessor {
     }
 
     public <T> void sendMessage(PrintWriter out, T message) {
-        /*String json = gson.toJson(message);
-        out.println(message);*/
         out.println(message);
     }
 
